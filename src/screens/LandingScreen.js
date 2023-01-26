@@ -6,6 +6,7 @@ export default function LandingScreen() {
   return (
     <div>
         <Header />
+        
         <Footer />
     </div>
   )

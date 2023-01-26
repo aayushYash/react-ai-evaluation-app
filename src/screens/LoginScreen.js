@@ -1,6 +1,8 @@
 import React from 'react'
 import Footer from '../components/general/Footer'
 import Header from '../components/general/Header'
+import Form from '../components/ui/Form'
+import GoogleButton from '../components/ui/GoogleButton'
 
 export default function LoginScreen() {
   return (
@@ -10,19 +12,9 @@ export default function LoginScreen() {
             <div className='leftBody'>
                 <img src='' />
             </div>
-            <div>
-                <div className='socialMediaAuth'>
-                    <span>
-                        <img />
-                    </span>
-                    <span>
-                        <img />
-                    </span>
-                </div>
-                {/* <form onSubmit={submitHandler}>
-
-                </form> */}
-            </div>
+            <Form>
+                <GoogleButton text='Continue with' />
+            </Form>
         </div>
         <Footer />
     </div>
