@@ -6,7 +6,7 @@ export default function RegisterScreen() {
   return (
     <div>
         <Header />
-        <Footer />
+        <Footer position='absolute' />
     </div>
   )
 }

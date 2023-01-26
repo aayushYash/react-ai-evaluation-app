@@ -16,7 +16,7 @@ export default function LoginScreen() {
                 <GoogleButton text='Continue with' />
             </Form>
         </div>
-        <Footer />
+        <Footer position='absolute' />
     </div>
-  )
+  );
 }
