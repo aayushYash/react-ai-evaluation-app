@@ -1,7 +1,8 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import "./Button.css";
 
-export default function Button({ text, type, onclick }) {
+export default function Button({ text, type, onclick,icon }) {
   const [color, setColor] = useState("#fff");
   const [bgcolor, setBgcolor] = useState("#01082D");
 
@@ -17,16 +18,17 @@ export default function Button({ text, type, onclick }) {
   }, [type]);
 
   return (
-    <span
-      onClick={onclick}
-      className="button"
-      style={{
-        color: `${color}`,
-        backgroundColor: `${bgcolor}`,
-        borderColor: `${color}`,
-      }}
-    >
+    <div onClick={onclick}
+        className="button"
+        style={{
+          color: `${color}`,
+          backgroundColor: `${bgcolor}`,
+          borderColor: `${color}`,
+        }}>
+    <span>
       {text}
     </span>
+    {icon && <FontAwesomeIcon icon={`fa-solid fa-${icon}`} className='icon' />}
+    </div>
   );
 }

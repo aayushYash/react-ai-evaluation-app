@@ -1,0 +1,27 @@
+.inputtextContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px;
+    margin: 5px 0;
+    width: 300px;
+}
+
+.inputtext{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border: 0.5px solid rgba(0,0,0);
+    line-height: 20px;
+    font-size: 16px;
+    padding: 4px 2px;
+    margin-left: 5px;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.icon {
+    margin: 0 5px;
+    font-size: 18px;
+}

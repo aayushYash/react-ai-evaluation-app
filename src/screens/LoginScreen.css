@@ -1,0 +1,24 @@
+.loginPage{
+    height: 100vh;
+}
+
+.loginPageBody{
+    height: calc(100vh - 250px);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.leftBody{
+    flex: 1;
+    height: 100%;
+    display: grid;
+    place-content: center;
+}
+
+.rightBody{
+    height: 100%;
+    flex: 1;
+    position: relative;
+}

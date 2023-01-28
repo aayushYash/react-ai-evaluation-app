@@ -1,7 +1,7 @@
 .Form{
     width: clamp(300px, 90%, 450px);
-    min-height: 300px;
-    height: clamp(400px, 90%, 550px);
+    height: clamp(200px, 90%, 550px);
+    height: 500px;
     background: #fff;
     position: absolute;
     z-index: 10;
@@ -9,6 +9,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 15px;
+    border-radius: 4px 4px 15px 15px;
     box-shadow: 5px 5px 10px rgba(0,0,0,0.4);
+    /* padding-top: 20px; */
+    padding-bottom: 20px;
+    overflow: hidden;    
+    left: 50%;
+    bottom: -50px;
+    transform: translateX(-50%);
 }
