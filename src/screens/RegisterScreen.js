@@ -8,6 +8,7 @@ import InputText from "../components/ui/InputText";
 import Button from "../components/ui/Button";
 import DatePicker from "../components/ui/DatePicker";
 import RadioGroupButton from "../components/ui/RadioGroupButton";
+import Model from "../components/general/Model";
 
 export default function RegisterScreen() {
   const [emailId, setEmailId] = useState("");
@@ -36,7 +37,8 @@ export default function RegisterScreen() {
   console.log(emailId);
   return (
     <div>
-      <Header />
+      <Model />
+      {/* <Header />
       <div className="loginPageBody">
         <div className="leftBody">
           <img className=" w-full h-[400px]" src="/images/b4.gif" alt="" />
@@ -89,10 +91,11 @@ export default function RegisterScreen() {
               Forgot Password ?
             </p>
             <Button text="Register" icon="caret-right" />
+            <Model />
           </Form>
         </div>
       </div>
-      <Footer position="absolute" />
+      <Footer position="absolute" /> */}
     </div>
   );
 }
