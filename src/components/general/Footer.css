@@ -10,7 +10,7 @@
   border-top-right-radius: 15px;
   align-items: flex-end;
   padding-bottom: 20px;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .title {
@@ -46,8 +46,10 @@ p {
 @media screen and (max-width: 450px) {
   .footer {
     flex-direction: column;
+    width: 100vw;
   }
   .leftFooter {
+    width: 100%;
     flex: 4;
   }
   .rightFooter {

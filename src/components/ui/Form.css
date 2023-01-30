@@ -15,6 +15,5 @@
     padding-bottom: 20px;
     overflow: hidden;    
     left: 50%;
-    bottom: -50px;
     transform: translateX(-50%);
 }
