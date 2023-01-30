@@ -1,9 +1,9 @@
 import React from 'react'
 import './Form.css'
 
-export default function Form({submitHandler, children}) {
+export default function Form({ children}) {
   return (
-    <div className='Form' style={{position: ''}}>
+    <div className='Form'>
         {children}  
     </div>
   )
