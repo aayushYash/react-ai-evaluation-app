@@ -7,6 +7,7 @@ import ToggleButton from "../components/ui/ToggleButton";
 import InputText from "../components/ui/InputText";
 import Button from "../components/ui/Button";
 import DatePicker from "../components/ui/DatePicker";
+import RadioGroupButton from "../components/ui/RadioGroupButton";
 
 export default function RegisterScreen() {
   const [emailId, setEmailId] = useState("");
@@ -61,6 +62,25 @@ export default function RegisterScreen() {
               type={"password"}
             />
 
+            <InputText
+              val={emailId}
+              onchange={OnChangeHandler}
+              icon="lock"
+              type={"password"}
+            />
+            <InputText
+              val={emailId}
+              onchange={OnChangeHandler}
+              icon="school"
+              type={"text"}
+            />
+
+            <RadioGroupButton
+              legend="Gender"
+              group="gender"
+              changeHandler={() => {}}
+              buttonsText={["male", "female"]}
+            />
             <DatePicker value={date} onChange={datePicker} />
             <p
               onClick={ForgotHandler}
@@ -68,7 +88,7 @@ export default function RegisterScreen() {
             >
               Forgot Password ?
             </p>
-            <Button text="Login" icon="caret-right" />
+            <Button text="Register" icon="caret-right" />
           </Form>
         </div>
       </div>
