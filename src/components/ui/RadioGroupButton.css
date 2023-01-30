@@ -1,36 +1,35 @@
 .radioFieldset {
-    border-width: 2px;
-    border-style: solid;
-    border-color: rgb(0, 0, 0);
-    padding: 10px 20px;
-    border-radius: 15px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  border-radius: 15px;
 }
 
 .legend {
-    padding-left: 5px;
-    padding-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-.radioContainer{
-    display: flex;
-    flex-direction: row;
-    width: 200px;
+.radioContainer {
+  display: flex;
+  flex-direction: row;
+  width: 200px;
 }
 
 .radio {
-    margin-right: 10px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
 .radioButton {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .radioLabel {
-    vertical-align: middle;
-    padding-left: 5px;
+  vertical-align: middle;
+  padding-left: 5px;
 }
