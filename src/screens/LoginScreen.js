@@ -59,7 +59,6 @@ export default function LoginScreen() {
             <div className='rightBody'>
             <Form>
                 <ToggleButton group='typeofuser' changeHandler={ToggleHandler} />
-                <span style={{'fontWeight': 700,'margin' : '10px 0'}}>LOGIN</span>
                 <GoogleButton text='Continue with' onClickHandler={LoginWithGoogle} />
                 <span>
                     <legend>OR</legend>
