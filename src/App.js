@@ -16,6 +16,7 @@ import {
   faEyeSlash,
   faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
+import VerifyUser from "./screens/VerifyUser";
 
 library.add(
   fab,
@@ -34,9 +35,11 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingScreen />} />
+        {/* <Route path="/" element={<LandingScreen />} />
         <Route path="login" element={<LoginScreen />} />
-        <Route path="register" element={<RegisterScreen />} />
+        <Route path="register" element={<RegisterScreen />} /> */}
+        <Route path="/" element={<VerifyUser />} />
+
         {/* <Route path='StudentDashboard' element={<StudentDashboard />}/> */}
       </Routes>
     </Router>

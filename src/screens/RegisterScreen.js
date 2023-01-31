@@ -38,7 +38,7 @@ export default function RegisterScreen() {
   return (
     <div>
       <Model />
-      {/* <Header />
+      <Header />
       <div className="loginPageBody">
         <div className="leftBody">
           <img className=" w-full h-[400px]" src="/images/b4.gif" alt="" />
@@ -95,7 +95,7 @@ export default function RegisterScreen() {
           </Form>
         </div>
       </div>
-      <Footer position="absolute" /> */}
+      <Footer position="absolute" />
     </div>
   );
 }
