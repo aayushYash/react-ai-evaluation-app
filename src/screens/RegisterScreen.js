@@ -94,7 +94,7 @@ export default function RegisterScreen() {
           </Form>
         </div>
       </div>
-      <Footer position="absolute" /> 
+      <Footer position="absolute" />
     </div>
   );
 }
