@@ -2,8 +2,8 @@
   width: clamp(300px, 90%, 450px);
   /* height: 450px; */
   padding: 20px;
-  min-height: 380px;
-  max-height: 100%;
+  min-height: fit-content;
+  /* max-height: 100%; */
   background: #fff;
   position: absolute;
   z-index: 10;
@@ -23,6 +23,7 @@
 @media screen and (max-width: 500px) {
   .Form {
     position: relative;
+    max-height: calc(100% - 40px) ;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);

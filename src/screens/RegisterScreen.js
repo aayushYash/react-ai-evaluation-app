@@ -36,8 +36,7 @@ export default function RegisterScreen() {
   };
   console.log(emailId);
   return (
-    <div>
-      <Model />
+    <div className="loginPage">
       <Header />
       <div className="loginPageBody">
         <div className="leftBody">
@@ -46,7 +45,7 @@ export default function RegisterScreen() {
         <div className="rightBody">
           <Form>
             <ToggleButton group="typeofuser" changeHandler={ToggleHandler} />
-            <span style={{ fontWeight: 700, margin: "10px 0" }}>LOGIN</span>
+            <span style={{ margin: "20px 0" }}></span>
             <GoogleButton text="Continue with" />
             <span>
               <legend>OR</legend>
