@@ -6,22 +6,33 @@
     height: 40px;
     margin: 5px 0;
     width: 300px;
+    position: relative;
 }
 
 .inputtext{
     background-color: transparent;
-    border: none;
+    /* border: none; */
     outline: none;
-    border: 0.5px solid rgba(0,0,0);
+    border-width: 0.5px;
+    border-style: solid;
     line-height: 20px;
     font-size: 16px;
     padding: 4px 2px;
     margin-left: 5px;
     border-radius: 5px;
-    width: 200px;
+    width: 220px;
+    padding: 3px 5px;
 }
 
 .icon {
     margin: 0 5px;
     font-size: 18px;
+    width: 20px;
+}
+
+.pass{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }

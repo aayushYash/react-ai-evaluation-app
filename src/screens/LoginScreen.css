@@ -1,9 +1,8 @@
-.loginPage{
-    height: 100vh;
-}
+
 
 .loginPageBody{
-    height: calc(100vh - 250px);
+    min-height: fit-content;
+    height: calc(100vh - 260px);
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -18,9 +17,11 @@
 }
 
 .rightBody{
+    min-height: fit-content;
     height: 100%;
     flex: 1;
     position: relative;
+    padding-top: 20px;
 }
 
 

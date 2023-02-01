@@ -3,7 +3,6 @@ import './RadioGroupButton.css'
 
 export default function RadioGroupButton({ legend, buttonsText, group, changeHandler }) {
 
-  console.log(buttonsText)
 
   return (
     <fieldset className='radioFieldset'>

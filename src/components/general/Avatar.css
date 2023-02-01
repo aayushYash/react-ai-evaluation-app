@@ -1,0 +1,10 @@
+.avatar{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}

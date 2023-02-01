@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
 import GoogleButton from "../components/ui/GoogleButton";
@@ -6,95 +6,154 @@ import Form from "../components/ui/Form";
 import ToggleButton from "../components/ui/ToggleButton";
 import InputText from "../components/ui/InputText";
 import Button from "../components/ui/Button";
-import DatePicker from "../components/ui/DatePicker";
 import RadioGroupButton from "../components/ui/RadioGroupButton";
-import Model from "../components/general/Model";
+
+import { CreateUserWithEmailPassword } from "../firebase/firebaseFunctions";
 
 export default function RegisterScreen() {
+
+  // States for different
   const [emailId, setEmailId] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [password,setPassword] = useState('');
+  const [confirmedPassword,setConfirmedPassword] = useState('');
+  const [institute,setInstitute] = useState('');
+  const [typeOfUser, setTypeOfUser] = useState('Student');
+  const [gender,setGender] = useState(null)
+  const [validEmail, setValidEmail] = useState(true);
+  const [validConfirmPassword, setValidConfirmPassword] = useState(true);
 
+  // Registration Firebase Funtion Link
+  const RegisterHandler = () => {
+    console.log(emailId);
+    console.log(password);
+    console.log(confirmedPassword);
+    console.log(institute);
+    console.log(typeOfUser);
+    console.log(gender);
+    CreateUserWithEmailPassword(emailId,password);
+  }
+  
+  // Forgot Firebase Function Link
   const ForgotHandler = () => {
-    console.log("click forgot handler");
-  };
+    console.log('Forgot Password')
+  }
 
-  const OnChangeHandler = (e) => {
-    setEmailId(e.target.value);
-  };
+  // UseEffect for validation of fields
+  useEffect(() => {
+    if(emailId.length > 0 && !(emailId.includes('@'))){
+      setValidEmail(false)
+    }
+    else{
+      setValidEmail(true)
+    }
+    if((confirmedPassword.length === password.length || confirmedPassword.length > password.length )&& confirmedPassword !== password){
+      setValidConfirmPassword(false)
+    }
+    else{
+      setValidConfirmPassword(true)
+    }
+  }, [emailId,confirmedPassword])
 
-  const radioChangeHandler = (e) => {
-    console.log(e.target.value);
-  };
-
-  const ToggleHandler = (e) => {
-    console.log(e.target.value);
-  };
-
-  const datePicker = (e) => {
-    setDate(e.target.value);
-    console.log(date);
-  };
-  console.log(emailId);
+  
+  
+  
   return (
+    // Registeration Page
     <div className="loginPage">
+      {/* Header */}
       <Header />
+
+      {/* Registration Body */}
       <div className="loginPageBody">
+
+        {/* Registration Left Body */}
         <div className="leftBody">
+          {/* Image in left side */}
           <img className=" w-full h-[400px]" src="/images/b4.gif" alt="" />
         </div>
+
+        {/* Registration Right Body */}
         <div className="rightBody">
+
+          {/* Form */}
           <Form>
-            <ToggleButton group="typeofuser" changeHandler={ToggleHandler} />
-            <span style={{ margin: "20px 0" }}></span>
+            {/* Toggle Button For type of user */}
+            <ToggleButton group="typeofuser" changeHandler={(e) => setTypeOfUser(e.target.value)} />
+            {/* Signup With Google */}
             <GoogleButton text="Continue with" />
+
+            {/* Separator */}
             <span>
               <legend>OR</legend>
             </span>
+
+            {/* Text Field Email */}
             <InputText
               val={emailId}
-              onchange={OnChangeHandler}
+              onchange={(e) => setEmailId(e.target.value)}
               icon="envelope"
               type={"text"}
-            />
-            <InputText
-              val={emailId}
-              onchange={OnChangeHandler}
-              icon="lock"
-              type={"password"}
+              placeholder='Email'
+              valid={validEmail}
+              invalidMsg='Enter a Valid Email.'
             />
 
+            {/* Text Field Password */}
             <InputText
-              val={emailId}
-              onchange={OnChangeHandler}
+              val={password}
+              onchange={(e) => setPassword(e.target.value)}
               icon="lock"
               type={"password"}
+              placeholder='Password'
+              valid={true}
             />
+            
+            {/* Text Field Confirm Password */}
             <InputText
-              val={emailId}
-              onchange={OnChangeHandler}
+              val={confirmedPassword}
+              onchange={(e) => setConfirmedPassword(e.target.value)}
+              icon="lock"
+              type={"password"}
+              placeholder='Confirm Password'
+              valid={validConfirmPassword}
+              invalidMsg='Password Does Not Match.'
+            />
+
+            {/* Text Field Institute */}
+            <InputText
+              val={institute}
+              onchange={(e) => setInstitute(e.target.value)}
               icon="school"
               type={"text"}
+              placeholder='Institute'
+              valid={true}
             />
-
+            
+            {/* Radio buttons for Gender */}
             <RadioGroupButton
               legend="Gender"
               group="gender"
-              changeHandler={() => {}}
+              changeHandler={(e) => setGender(e.target.value)}
               buttonsText={["male", "female"]}
             />
-            <DatePicker value={date} onChange={datePicker} />
+            {/* <DatePicker value={date} onChange={datePicker} /> */}
+
+            {/* Forgot Password */}
             <p
               onClick={ForgotHandler}
               style={{ color: "#1947FF", cursor: "pointer", width: "200px" }}
             >
               Forgot Password ?
             </p>
-            <Button text="Register" icon="caret-right" />
-            <Model />
+
+            {/* Registration Button */}
+            <Button text="Register" icon="caret-right" onclick={RegisterHandler} />
           </Form>
         </div>
       </div>
-      <Footer position="absolute" /> 
+
+      {/* Footer */}
+      <Footer position="relative" /> 
     </div>
   );
 }
