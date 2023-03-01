@@ -35,10 +35,10 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<LandingScreen />} />
+        <Route path="/" element={<LandingScreen />} />
         <Route path="login" element={<LoginScreen />} />
-        <Route path="register" element={<RegisterScreen />} /> */}
-        <Route path="/" element={<VerifyUser />} />
+        <Route path="register" element={<RegisterScreen />} />
+        <Route path="verifyemail" element={<VerifyUser />} />
 
         {/* <Route path='StudentDashboard' element={<StudentDashboard />}/> */}
       </Routes>

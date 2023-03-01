@@ -3,16 +3,22 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import { auth } from "./firebase";
+import {
+  doc,
+  setDoc
+} from 'firebase/firestore';
 
-async function CreateUserWithEmailPassword(email, password) {
+import { auth,db } from "./firebase";
+
+async function CreateUserWithEmailPassword(email, password, data) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       console.log(userCredential);
+      return setDoc(doc(db, 'users', userCredential.user.uid), data)
+
     })
     .catch((e) => {
-        console.log('helow world')
-      alert('wowowow');
+      console.log(e)
     });
 }
 

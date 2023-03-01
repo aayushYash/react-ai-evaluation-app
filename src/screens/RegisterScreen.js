@@ -24,13 +24,21 @@ export default function RegisterScreen() {
 
   // Registration Firebase Funtion Link
   const RegisterHandler = () => {
-    console.log(emailId);
-    console.log(password);
-    console.log(confirmedPassword);
-    console.log(institute);
-    console.log(typeOfUser);
-    console.log(gender);
-    CreateUserWithEmailPassword(emailId,password);
+
+    const userDate = {
+      email: emailId,
+      password: password,
+      institute: institute,
+      usertype: typeOfUser,
+      gender: gender 
+    }
+
+    if(password !== confirmedPassword){
+      console.log('Enter correct password');
+      return
+    }
+
+    CreateUserWithEmailPassword(emailId,password,userDate);
   }
   
   // Forgot Firebase Function Link
