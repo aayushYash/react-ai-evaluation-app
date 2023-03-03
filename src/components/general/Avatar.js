@@ -2,7 +2,7 @@ import { Player } from '@lottiefiles/react-lottie-player'
 import React from 'react'
 import './Avatar.css'
 
-export default function Avatar({user, loading, onclick}) {
+export default function Avatar({user, loading, onclick,children}) {
   return (
     <div className='avatar' onClick={onclick}>
         {user && <img src='*' />}
@@ -11,6 +11,7 @@ export default function Avatar({user, loading, onclick}) {
         autoplay
         loop>
         </Player>}
+        {children}
     </div>
   )
 }

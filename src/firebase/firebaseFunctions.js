@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendEmailVerification 
 } from "firebase/auth";
 
 import {
@@ -25,9 +26,15 @@ async function CreateUserWithEmailPassword(email, password, data) {
 async function SignInWithEmailPassword(email, password) {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log(userCredential);
+      console.log(userCredential)
     })
-    .catch((e) => alert('wowoww'));
+    .catch((e) => console.log(e));
 }
 
-export { CreateUserWithEmailPassword, SignInWithEmailPassword };
+async function SendVerificationMail(){
+  sendEmailVerification(auth.currentUser).then(() => {
+    console.log('email sent...')
+  })
+}
+
+export { CreateUserWithEmailPassword, SignInWithEmailPassword, SendVerificationMail };

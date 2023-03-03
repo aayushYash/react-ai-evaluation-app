@@ -48,14 +48,21 @@ export default function Header() {
         <Button text="Login" type="dark" onclick={LoginButtonHandler} />
         <Button text="Signup" type="light" onclick={SignupButtonHandler} />
       </div>:
-      <Avatar loading={loading} user={user} onclick={UserProfileHander} />}
-      {userProfileVisible && <UserProfile onclick={signout} />}
+      <Avatar loading={loading} user={user} onclick={UserProfileHander} children={userProfileVisible ? <UserProfile signout={signout} /> : null} />}
+      
     </div>
   );
 }
 
-const UserProfile = ({onclick}) => {
+const UserProfile = ({signout}) => {
   return <div className="UserProfile">
-    <Button text='Sign Out' onclick={onclick} />
+    <div style={{'display': 'flex','flexDirection': 'column','justifyContent': 'center', 'alignItems': 'center', 'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
+      <Avatar />
+    </div>
+    <div style={{'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
+    <p>User Profile</p>
+    <p>Change Password</p>
+    </div>
+    <Button text='Sign Out' onclick={signout} />
   </div>
 }
