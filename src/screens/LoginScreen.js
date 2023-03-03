@@ -23,6 +23,7 @@ export default function LoginScreen() {
     useSendPasswordResetEmail(auth);
   const [popupVisible, setPopupVisible] = useState(false);
   const [id,setId] = useState()
+  const [success,setSuccess]= useState()
 
   const onEmailChange = (e) => {
     setEmailId(e.target.value);
@@ -47,36 +48,31 @@ export default function LoginScreen() {
     console.log("Login with google");
   };
 
-  const success = null
 
-  const ForgotHandler = async (email) => {
-    const success = await sendPasswordResetEmail(email);
+
+  const ForgotHandler =  (email) => {
+    setSuccess(async () => await sendPasswordResetEmail(email));
     setPopupVisible(false);
-    console.log(success,'hehe')
-    
-   
-    
     
   };
 
   useEffect(() => {
-    console.log(id, 'id')
-    console.log(sending,'sending')
     if (emailId.length > 0 && !emailId.includes("@")) {
       setValidEmail(false);
     } else {
       setValidEmail(true);
     }
     if(sending){
-        console.log('heyoo')
         setId(() => toast.loading('Sending Mail, Wait'))
     }
     else if(error){
-        console.log(error)
         toast.update(id,{render: error?.code, type: 'error', isLoading: false, autoClose: true});
     }
+    else if(success){
+        toast.update(id,{render: "Mail Sent Successfully", type: 'success', isLoading: false, autoClose: true})
+    }
 
-  }, [emailId,sending,error]);
+  }, [emailId,sending,error,success]);
 
   return (
     <div className="loginPage">
@@ -160,7 +156,7 @@ const ResetPasswordPopup = ({ sendResetMailHandler, closePopup }) => {
             type={"email"}
             icon="envelope"
             placeholder="Enter Your Email"
-            invalidMsg={"Enter Correct Email"}
+            valid={true}
           />
         </div>
         <Button text={"Send Reset Email"} onclick={() => sendResetMailHandler(email)} />
