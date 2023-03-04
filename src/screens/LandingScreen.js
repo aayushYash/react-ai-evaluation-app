@@ -1,7 +1,6 @@
 import React from "react";
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
-import Button from "../components/ui/Button";
 
 export default function LandingScreen() {
   return (
