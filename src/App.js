@@ -104,13 +104,13 @@ export default function App() {
 
   return (
     <Routes>
-      {/* <Route path="/" element={<LandingScreen />} /> */}
+      <Route path="/" element={<LandingScreen />} />
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />
       <Route path="verifyEmail" element={<VerifyUser />} />
       <Route path="StudentDashboard" element={<StudentDashboard />} />
       <Route path="Profile" element={<ManageProfile />} />
-      <Route path="/" element={<TeacherDashboard />} />
+      <Route path="TeacherDashboard" element={<TeacherDashboard />} />
     </Routes>
   );
 }
