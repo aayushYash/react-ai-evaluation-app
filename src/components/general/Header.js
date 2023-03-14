@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
+
 import Button from "../ui/Button";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +16,6 @@ export default function Header() {
   const [userProfileVisible, setUserProfileVisible] = useState(false);
 
   const UserProfileHander = () => {
-    console.log(userProfileVisible)
     if(userProfileVisible === true){
       setUserProfileVisible(false)
     }
@@ -48,19 +49,19 @@ export default function Header() {
         <Button text="Login" type="dark" onclick={LoginButtonHandler} />
         <Button text="Signup" type="light" onclick={SignupButtonHandler} />
       </div>:
-      <Avatar loading={loading} user={user} onclick={UserProfileHander} children={userProfileVisible ? <UserProfile signout={signout} /> : null} />}
+      <Avatar loading={loading} user={user} onclick={UserProfileHander} children={userProfileVisible ? <UserProfile signout={signout} user={user} /> : null} />}
       
     </div>
   );
 }
 
-const UserProfile = ({signout}) => {
+const UserProfile = ({signout, user}) => {
   return <div className="UserProfile">
     <div style={{'display': 'flex','flexDirection': 'column','justifyContent': 'center', 'alignItems': 'center', 'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
-      <Avatar />
+      <Avatar user={user} />
     </div>
     <div style={{'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
-    <p>User Profile</p>
+    <Link to="/Profile">User Profile</Link>
     <p>Change Password</p>
     </div>
     <Button text='Sign Out' onclick={signout} />

@@ -1,8 +1,11 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendEmailVerification 
+  sendEmailVerification,
+  GoogleAuthProvider,
+  updateProfile
 } from "firebase/auth";
+
 
 import {
   doc,
@@ -11,11 +14,18 @@ import {
 
 import { auth,db } from "./firebase";
 
+
+
 async function CreateUserWithEmailPassword(email, password, data) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log(userCredential);
-      return setDoc(doc(db, 'users', userCredential.user.uid), data)
+      console.log(userCredential, "HELLO");
+        console.log('hehe')
+      
+        console.log(data.name)
+        updateProfile(auth, {displayName: data.name})
+        setDoc(doc(db, 'users', userCredential.user.uid), data) 
+      
 
     })
     .catch((e) => {
@@ -36,5 +46,6 @@ async function SendVerificationMail(){
     console.log('email sent...')
   })
 }
+
 
 export { CreateUserWithEmailPassword, SignInWithEmailPassword, SendVerificationMail };

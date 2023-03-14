@@ -28,7 +28,7 @@ export default function Button({ text, type, onclick,icon }) {
     <span>
       {text}
     </span>
-    {icon && <FontAwesomeIcon icon={`fa-solid fa-${icon}`} className='icon' />}
+    {icon && <FontAwesomeIcon icon={`${icon}`} className='icon' />}
     </div>
   );
 }
