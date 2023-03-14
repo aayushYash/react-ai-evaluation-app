@@ -6,6 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* overflow: hidden; */
     position: relative;
+    border: #fff solid 3px;
+    cursor: pointer;
 }

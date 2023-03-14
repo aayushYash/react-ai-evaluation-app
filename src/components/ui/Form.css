@@ -3,6 +3,7 @@
   padding: 0;
   min-height: 400px;
   height: fit-content;
+  max-height:550px;
   background: #fff;
   position: relative;
   z-index: 10;
@@ -26,11 +27,11 @@
 @media screen and (max-width: 500px) {
   .Form {
     position: relative;
-    max-height: calc(100% - 40px) ;
+    max-height: calc(100% - 60px) ;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0;
+    transform: translateX(-50%);
+    z-index: 10;
+    margin-bottom: 30px;
   }
 }
 

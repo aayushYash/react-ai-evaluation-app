@@ -8,44 +8,151 @@ import InputText from "../components/ui/InputText";
 import Button from "../components/ui/Button";
 import RadioGroupButton from "../components/ui/RadioGroupButton";
 
-import { CreateUserWithEmailPassword } from "../firebase/firebaseFunctions";
+// import { CreateUserWithEmailPassword } from "../firebase/firebaseFunctions";
+import { auth, db } from "../firebase/firebase";
+import { useAuthState, useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from "react-firebase-hooks/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function RegisterScreen() {
 
   // States for different
   const [emailId, setEmailId] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password,setPassword] = useState('');
   const [confirmedPassword,setConfirmedPassword] = useState('');
   const [institute,setInstitute] = useState('');
+  const [instituteRollNumber,setInstituteRollNumber] = useState('');
+  const [branchDepartment,setBranchDepartment] = useState('')
   const [typeOfUser, setTypeOfUser] = useState('Student');
   const [gender,setGender] = useState(null)
   const [validEmail, setValidEmail] = useState(true);
   const [validConfirmPassword, setValidConfirmPassword] = useState(true);
 
+
+  const [updateProfile, updating, updatingError] = useUpdateProfile(auth);
+  const [signInWithGoogle, googleUser, googleLoading, googleError] = useSignInWithGoogle(auth);
+  const [
+    createUserWithEmailAndPassword,
+    emailandpasswordUser,
+    emailandpasswordLoading,
+    emaiandpasswordError,
+  ] = useCreateUserWithEmailAndPassword(auth);
+
+  const [userdata, setUserdata] = useState({})
+
+  
   // Registration Firebase Funtion Link
   const RegisterHandler = () => {
 
-    const userDate = {
-      email: emailId,
-      password: password,
-      institute: institute,
-      usertype: typeOfUser,
-      gender: gender 
-    }
+    if(emailId.length === 0 || fullName.trim().length === 0 || password.trim().length === 0 || confirmedPassword.trim().length ===0 || institute.trim().length ===0 || gender === null){
+      if(typeOfUser === 'Student' && (branchDepartment.trim().length === 0 || instituteRollNumber.trim().length === 0)) {
+        toast.error('Fill All the Field')   
+        return 
+      }
+      toast.error('Fill All the Field')   
+        return 
+    }    
 
     if(password !== confirmedPassword){
-      console.log('Enter correct password');
-      return
+      return  
+    }
+    createUserWithEmailAndPassword(emailId, password)
+  }
+
+  function SignUpWithGoogle() {
+    signInWithGoogle()
+  }
+
+
+  // Adding User Data in firebase on google signup/signin
+  useEffect(()=>{
+
+    async function CheckAndAddDoc() {
+      let docRef;
+      let docSnap
+      if(emailandpasswordUser){
+        console.log(emailandpasswordUser)
+        docRef = doc(db, "users", emailandpasswordUser?.user.uid);
+        docSnap = await getDoc(docRef);
+      }
+
+    if(docSnap?.exists()){
+      console.log('doc exist')
+    }
+    else if(typeOfUser === 'Student' && googleUser){
+      console.log('doc does not exist')
+      console.log('setting into db')
+      setDoc(doc(db,'users',googleUser?.user.uid), {profile: {
+        name: googleUser?.user.displayName,
+        email: googleUser?.user.email,
+        institute: '',
+        usertype: typeOfUser,
+        gender: '',
+        branchDepartment : '',
+        instituteRollNumber: ''
+      }})
+    }
+    if(typeOfUser === 'Teacher' && googleUser){
+      setDoc(doc(db,'users',googleUser?.user.uid), {profile: {
+        name: googleUser?.user.displayName,
+        email: googleUser?.user.email,
+        institute: '',
+        usertype: typeOfUser,
+        gender: '',
+      }})
+    }
+  }
+  CheckAndAddDoc();
+  },[googleUser])
+
+
+  // Adding User Data in firebase on Email-Password Signup  
+  useEffect(()=>{
+
+    async function CheckAndAddDoc() {
+
+    let docRef;
+    let docSnap
+    if(emailandpasswordUser){
+      console.log(emailandpasswordUser)
+      docRef = doc(db, "users", emailandpasswordUser?.user.uid);
+      docSnap = await getDoc(docRef);
     }
 
-    CreateUserWithEmailPassword(emailId,password,userDate);
-  }
-  
-  // Forgot Firebase Function Link
-  const ForgotHandler = () => {
-    console.log('Forgot Password')
-  }
+    console.log(docSnap,"docccccccccccccccccccc")
+    if(docSnap?.exists()){
+      console.log('doc exist')
+    }
+    else if(typeOfUser === 'Student' && emailandpasswordUser){
+      console.log('doc does not exist')
+      console.log('setting into db')
+      setDoc(doc(db,'users',emailandpasswordUser?.user.uid), {profile: {
+        name: fullName,
+        email: emailId,
+        institute: institute,
+        usertype: typeOfUser,
+        gender: gender,
+        branchDepartment : branchDepartment,
+        instituteRollNumber: instituteRollNumber
+      }})
+    }
+    if(typeOfUser === 'Teacher' && emailandpasswordUser){
+      console.log('doc does not exist')
 
+      setDoc(doc(db,'users',emailandpasswordUser?.user.uid), {profile: {
+        name: fullName,
+        email: emailId,
+        institute: institute,
+        usertype: typeOfUser,
+        gender: gender,
+      }})
+    }
+  }
+  CheckAndAddDoc();
+  },[emailandpasswordUser])
+  
+  
   // UseEffect for validation of fields
   useEffect(() => {
     if(emailId.length > 0 && !(emailId.includes('@'))){
@@ -60,11 +167,23 @@ export default function RegisterScreen() {
     else{
       setValidConfirmPassword(true)
     }
-  }, [emailId,confirmedPassword])
+  }, [emailId,confirmedPassword,password])
 
-  
-  
-  
+
+
+  // Pop Error For Google or Email-Password Signup
+  useEffect(()=>{
+    if(googleError){
+      toast.error(googleError.code)
+    }
+    if(emaiandpasswordError){
+      toast.error(emaiandpasswordError.code)
+    }
+
+  }, [googleError,emaiandpasswordError])
+
+
+
   return (
     // Registeration Page
     <div className="loginPage">
@@ -73,6 +192,11 @@ export default function RegisterScreen() {
 
       {/* Registration Body */}
       <div className="loginPageBody">
+      <ToastContainer
+       autoClose={2000}
+       closeOnClick
+       theme="colored"
+        />
 
         {/* Registration Left Body */}
         <div className="leftBody">
@@ -88,12 +212,23 @@ export default function RegisterScreen() {
             {/* Toggle Button For type of user */}
             <ToggleButton group="typeofuser" changeHandler={(e) => setTypeOfUser(e.target.value)} />
             {/* Signup With Google */}
-            <GoogleButton text="Continue with" />
+            <GoogleButton text="Continue with" onClickHandler={SignUpWithGoogle } />
 
             {/* Separator */}
             <span>
               <legend>OR</legend>
             </span>
+
+             {/* Text Field Full Name */}
+             <InputText
+              val={fullName}
+              onchange={(e) => setFullName(e.target.value)}
+              icon="user"
+              type={"text"}
+              placeholder='Name'
+              valid={true}
+            />
+
 
             {/* Text Field Email */}
             <InputText
@@ -136,6 +271,25 @@ export default function RegisterScreen() {
               placeholder='Institute'
               valid={true}
             />
+
+           {typeOfUser === 'Student' && <InputText
+              val={branchDepartment}
+              onchange={(e) => setBranchDepartment(e.target.value)}
+              icon="school"
+              type={"text"}
+              placeholder='Branch/Department'
+              valid={true}
+            />
+            }
+            { typeOfUser === 'Student' &&
+            <InputText
+              val={instituteRollNumber}
+              onchange={(e) => setInstituteRollNumber(e.target.value)}
+              icon="school"
+              type={"text"}
+              placeholder='Institute Roll Number'
+              valid={true}
+            />}
             
             {/* Radio buttons for Gender */}
             <RadioGroupButton
@@ -144,15 +298,8 @@ export default function RegisterScreen() {
               changeHandler={(e) => setGender(e.target.value)}
               buttonsText={["male", "female"]}
             />
-            {/* <DatePicker value={date} onChange={datePicker} /> */}
 
-            {/* Forgot Password */}
-            <p
-              onClick={ForgotHandler}
-              style={{ color: "#1947FF", cursor: "pointer", width: "200px" }}
-            >
-              Forgot Password ?
-            </p>
+            
 
             {/* Registration Button */}
             <Button text="Register" icon="caret-right" onclick={RegisterHandler} />

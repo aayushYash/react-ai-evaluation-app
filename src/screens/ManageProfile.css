@@ -1,0 +1,33 @@
+.ProfileSection{
+    border: 1px solid #000;
+    border-radius: 8px;
+    width: clamp(250px,90%,500px);
+    height: fit-content;
+    padding: 50px 5px 10px 5px;
+}
+
+.ProfileScreen{
+    display: flex;
+    flex-direction: column;
+}
+
+.ProfileBody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 60px);
+}
+
+
+@media screen and (max-width: 450px) {
+    .td{
+        font-size: 12px;
+        width: 50px;
+        /* word-break: break-all; */
+        word-wrap: break-word;
+    }
+    .table{
+        max-width: 350px;
+    }
+}
