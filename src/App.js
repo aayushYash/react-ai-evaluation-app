@@ -88,6 +88,9 @@ export default function App() {
       signOut(auth)
       navigate('login')
     }
+    if(!user){
+      navigate('/')
+    }
 
     
   }, [user,userData])
