@@ -33,6 +33,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { userState } from "./Atom/atom";
 import { signOut } from "firebase/auth";
+import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
 
 library.add(
   fas,
@@ -103,12 +104,13 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingScreen />} />
+      {/* <Route path="/" element={<LandingScreen />} /> */}
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />
       <Route path="verifyEmail" element={<VerifyUser />} />
       <Route path="StudentDashboard" element={<StudentDashboard />} />
       <Route path="Profile" element={<ManageProfile />} />
+      <Route path="/" element={<TeacherDashboard />} />
     </Routes>
   );
 }
