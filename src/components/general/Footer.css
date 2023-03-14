@@ -1,4 +1,5 @@
 .footer {
+  min-height: fit-content;
   height: 200px;
   width: 100%;
   bottom: 0;
@@ -46,7 +47,9 @@ p {
 @media screen and (max-width: 450px) {
   .footer {
     flex-direction: column;
+    padding-top: 60px;
     width: 100vw;
+    font-size: 12px;
   }
   .leftFooter {
     width: 100%;
