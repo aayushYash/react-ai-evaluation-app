@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
-import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
@@ -11,34 +11,19 @@ import InputText from "../components/ui/InputText";
 import ToggleButton from "../components/ui/ToggleButton";
 import "./LoginScreen.css";
 import { SignInWithEmailPassword } from "../firebase/firebaseFunctions";
-import { auth, db } from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { doc, getDoc } from "firebase/firestore";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { selectedTypeOfUser } from "../Atom/atom";
 
 export default function LoginScreen() {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [validEmail, setValidEmail] = useState(true);
-  const [sendPasswordResetEmail, sending, errorPasswordReset] =
+  const [sendPasswordResetEmail, sending, error] =
     useSendPasswordResetEmail(auth);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [id,setId] = useState()
-  const [success,setSuccess]= useState()
-  const [userType, setUserType] = useRecoilState(selectedTypeOfUser)
-  const [
-    signInWithEmailAndPassword,
-    signInWithEmailAndPasswordUser,
-    signInWithEmailAndPasswordLoading,
-    errorSignInWithEmail,
-  ] = useSignInWithEmailAndPassword(auth);
-  const [signInWithGoogle, signInWithGoogleUser, signInWithGoogleLoading, signInWithGoogleError] = useSignInWithGoogle(auth);
-  const navigate = useNavigate();
-
+  const [id, setId] = useState();
+  const [success, setSuccess] = useState();
 
   const onEmailChange = (e) => {
     setEmailId(e.target.value);
@@ -49,14 +34,14 @@ export default function LoginScreen() {
   };
 
   const ToggleHandler = (e) => {
-    console.log(e.target.value)
-    setUserType(e.target.value);
+    console.log(e.target.value);
   };
 
   // firebase functionality below 👇.
 
   const LoginHandler = () => {
-    signInWithEmailAndPassword(emailId,password)
+    // implement firebase login with password
+    SignInWithEmailPassword(emailId, password);
   };
 
   useEffect(()=>{
@@ -81,15 +66,12 @@ export default function LoginScreen() {
   },[signInWithEmailAndPasswordUser,signInWithGoogleUser])
 
   const LoginWithGoogle = () => {
-    signInWithGoogle();
+    console.log("Login with google");
   };
 
-
-
-  const ForgotHandler =  (email) => {
+  const ForgotHandler = (email) => {
     setSuccess(async () => await sendPasswordResetEmail(email));
     setPopupVisible(false);
-    
   };
 
   useEffect(() => {
@@ -98,25 +80,28 @@ export default function LoginScreen() {
     } else {
       setValidEmail(true);
     }
-    if(sending){
-        setId(() => toast.loading('Sending Mail, Wait'))
+    if (sending) {
+      setId(() => toast.loading("Sending Mail, Wait"));
+    } else if (error) {
+      toast.update(id, {
+        render: error?.code,
+        type: "error",
+        isLoading: false,
+        autoClose: true,
+      });
+    } else if (success) {
+      toast.update(id, {
+        render: "Mail Sent Successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: true,
+      });
     }
-    else if(errorPasswordReset){
-        toast.update(id,{render: errorPasswordReset?.code, type: 'error', isLoading: false, autoClose: true});
-    }
-    else if(success){
-        toast.update(id,{render: "Mail Sent Successfully", type: 'success', isLoading: false, autoClose: true})
-    }
-
-  }, [emailId,sending,errorPasswordReset,success]);
+  }, [emailId, sending, error, success]);
 
   return (
     <div className="loginPage">
-       <ToastContainer
-       autoClose={2000}
-       closeOnClick
-       theme="colored"
-        />
+      <ToastContainer autoClose={2000} closeOnClick theme="colored" />
       {popupVisible && (
         <ResetPasswordPopup
           sendResetMailHandler={ForgotHandler}
@@ -182,7 +167,7 @@ const ResetPasswordPopup = ({ sendResetMailHandler, closePopup }) => {
 
   return (
     <div className="PopupBackGround">
-        <div className="Closepopup" onClick={closePopup} />
+      <div className="Closepopup" onClick={closePopup} />
       <div className="Popup" onClick={null}>
         <div style={{ marginBottom: "10px" }}>
           <h1 className="ResetTitle">Reset Password</h1>
@@ -195,7 +180,10 @@ const ResetPasswordPopup = ({ sendResetMailHandler, closePopup }) => {
             valid={true}
           />
         </div>
-        <Button text={"Send Reset Email"} onclick={() => sendResetMailHandler(email)} />
+        <Button
+          text={"Send Reset Email"}
+          onclick={() => sendResetMailHandler(email)}
+        />
       </div>
     </div>
   );

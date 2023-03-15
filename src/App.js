@@ -1,11 +1,16 @@
-import React, { useEffect,useState } from "react";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import LandingScreen from "./screens/LandingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import {fas} from '@fortawesome/free-solid-svg-icons'
+import { fas } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser,
   faLock,
@@ -28,6 +33,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { userState } from "./Atom/atom";
 import { signOut } from "firebase/auth";
+import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
 
 library.add(
   fas,
@@ -49,11 +55,11 @@ export default function App() {
 
 
   const [user, loading, error] = useAuthState(auth);
-  const [userData,setUserData] = useState();
-  const selectedUserType = useRecoilValue(userState)
+  const [userData, setUserData] = useState();
+  const selectedUserType = useRecoilValue(userState);
   const navigate = useNavigate();
 
-  console.log('apppppppppppppppppppp',selectedUserType)
+  console.log("apppppppppppppppppppp", selectedUserType);
 
   useEffect(() => {
 
@@ -79,13 +85,17 @@ export default function App() {
     if(user && !user.emailVerified){
       navigate('verifyEmail')
     }
-    if(user && userData?.profile.institute.length === 0){
-      console.log(userData?.profile.institute)
-      console.log('profileeeeeee')
-      navigate('Profile')
+    if (user && userData?.profile.institute.length === 0) {
+      console.log(userData?.profile.institute);
+      console.log("profileeeeeee");
+      navigate("Profile");
     }
-    if(user && user.emailVerified && userData?.profile.institute.length !== 0){
-      navigate('StudentDashboard')
+    if (
+      user &&
+      user.emailVerified &&
+      userData?.profile.institute.length !== 0
+    ) {
+      navigate("StudentDashboard");
     }
     if(user && userData && selectedUserType !== userData?.profile.usertype){
       console.log(selectedUserType,"app line 88")
@@ -103,14 +113,14 @@ export default function App() {
 
 
   return (
-      <Routes>
-        <Route path="/" element={<LandingScreen />} />
-        <Route path="login" element={<LoginScreen />} />
-        <Route path="register" element={<RegisterScreen />} />
-        <Route path="verifyEmail" element={<VerifyUser />} />
-        <Route path='StudentDashboard' element={<StudentDashboard />}/>
-        <Route path='Profile' element={<ManageProfile />}/>
-
-      </Routes>
+    <Routes>
+      <Route path="/" element={<LandingScreen />} />
+      <Route path="login" element={<LoginScreen />} />
+      <Route path="register" element={<RegisterScreen />} />
+      <Route path="verifyEmail" element={<VerifyUser />} />
+      <Route path="StudentDashboard" element={<StudentDashboard />} />
+      <Route path="Profile" element={<ManageProfile />} />
+      <Route path="TeacherDashboard" element={<TeacherDashboard />} />
+    </Routes>
   );
 }
