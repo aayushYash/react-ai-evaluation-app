@@ -7,6 +7,7 @@ import Header from '../components/general/Header';
 import Button from '../components/ui/Button';
 import InputText from '../components/ui/InputText';
 import { auth, db } from '../firebase/firebase';
+import {useNavigate} from 'react-router-dom'
 import './ManageProfile.css'
 
 export default function ManageProfile() {
@@ -21,6 +22,7 @@ export default function ManageProfile() {
     const [instituteRollNumber,setInstituteRollNumber] = useState(null)
 
     const [user,loading,error] = useAuthState(auth);
+    const navigate = useNavigate()
 
     useEffect(()=>{
         if(profileEditState){
@@ -29,6 +31,8 @@ export default function ManageProfile() {
             setFieldDisabled(true)
         }
     }, [profileEditState])
+
+
 
     useEffect(()=>{
         async function ReadData() {
@@ -110,6 +114,7 @@ export default function ManageProfile() {
                     <tr>
                         <td colSpan={4} >
                             <div style={{display: 'flex',alignItems: 'center',justifyContent: 'center',width: '100%'}}>
+                            <Button text={'Back'} onclick={() => navigate(-1)} />
                             <Button text={profileEditState ? 'Save' : 'Edit'} onclick={profileEditState ? SaveHandler : () => setProfileEditState(true)} />
                             </div>
                         </td>

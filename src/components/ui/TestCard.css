@@ -1,0 +1,34 @@
+.card-container{
+    background-color: #fff;
+    width: 180px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.test-title{
+    font-weight: 100;
+    font-size: 20px;
+}
+
+.test-subtitle{
+    color: #777;
+    font-size: 16px;
+}
+.test-duration{
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.test-status{
+    color: #777;
+    font-size: 12px;
+}
+
+.test-created-by{
+    font-size: 12px;
+}

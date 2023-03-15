@@ -9,7 +9,7 @@ import { useAuthState } from 'react-firebase-hooks/auth' ;
 import Avatar from "./Avatar";
 import { signOut } from "firebase/auth";
 
-export default function Header() {
+export default function Header({children}) {
   const navigate = useNavigate();
 
   const [user,loading,error] = useAuthState(auth);
@@ -49,13 +49,15 @@ export default function Header() {
         <Button text="Login" type="dark" onclick={LoginButtonHandler} />
         <Button text="Signup" type="light" onclick={SignupButtonHandler} />
       </div>:
-      <Avatar loading={loading} user={user} onclick={UserProfileHander} children={userProfileVisible ? <UserProfile signout={signout} user={user} /> : null} />}
+      <div style={{display: 'flex', alignItems: 'center'}}>
+        {children}
+        <Avatar loading={loading} user={user} onclick={UserProfileHander} children={userProfileVisible ? <UserProfile signout={signout} user={user} /> : null} /></div>}
       
     </div>
   );
 }
 
-const UserProfile = ({signout, user}) => {
+const UserProfile = ({signout, user, children}) => {
   return <div className="UserProfile">
     <div style={{'display': 'flex','flexDirection': 'column','justifyContent': 'center', 'alignItems': 'center', 'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
       <Avatar user={user} />
@@ -64,6 +66,7 @@ const UserProfile = ({signout, user}) => {
     <Link to="/Profile">User Profile</Link>
     <p>Change Password</p>
     </div>
+    {children}
     <Button text='Sign Out' onclick={signout} />
   </div>
 }

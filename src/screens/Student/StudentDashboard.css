@@ -1,0 +1,68 @@
+.StudentDashboardScreen{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #d3cdcd;
+    
+}
+.StudentDashboardBody{
+    margin: 50px 0;
+    width: clamp(300px,90%,1050px);
+    padding: 20px clamp(20px,4.5%,100px) ;
+    align-self: center;
+    height: 100%;
+    background-color: #e8e7e77b;
+    border-radius: 8px;
+    border: 0.5px solid rgba(0,0,0,0.2);
+    /* box-shadow: 8px 8px 5px rgba(0,0,0,0.1),
+    -8px -8px 5px rgba(0,0,0,0.1); */
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0,0,0,0.22) 0px 10px 10px;
+    /* border: 1px solid white; */
+}
+
+.greeting-msg{
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.testResults .result{
+    height: 220px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+.testResults .result legend{
+    margin: 0 15px;
+    padding: 0 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.tests{
+    margin-top: 15px;
+    padding: 10px 0;
+    border-top: 1px solid black;
+}
+.tests legend{
+    padding-left: 30px;
+    padding-right: 20px;
+}
+.test-heading{
+    font-weight: bold;
+    font-size: 24px;
+}
+
+
+@media screen and (max-width: 450px) {
+    .testResults .result legend{
+        font-size: 16px;
+    }
+    .test-heading{
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .tests legend{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
