@@ -44,26 +44,30 @@ export default function LoginScreen() {
     SignInWithEmailPassword(emailId, password);
   };
 
-  useEffect(()=>{
-    async function GetUserData(){
-      if(signInWithEmailAndPasswordUser){
-        const docSnap = await getDoc(doc(db,'users',signInWithEmailAndPasswordUser?.user.uid))
-        if (docSnap.data()?.profile.usertype !== userType){
-          toast.error('Not Authorised User!')
-          console.log('hhh')
-        } 
+  useEffect(() => {
+    async function GetUserData() {
+      if (signInWithEmailAndPasswordUser) {
+        const docSnap = await getDoc(
+          doc(db, "users", signInWithEmailAndPasswordUser?.user.uid)
+        );
+        if (docSnap.data()?.profile.usertype !== userType) {
+          toast.error("Not Authorised User!");
+          console.log("hhh");
+        }
       }
-      if(signInWithGoogleUser){
-        const docSnap = await getDoc(doc(db,'users',signInWithGoogleUser?.user.uid))
-        if (docSnap.data()?.profile.usertype !== userType){
-          toast.error('Not Authorised User!')
-          console.log('hhh')
+      if (signInWithGoogleUser) {
+        const docSnap = await getDoc(
+          doc(db, "users", signInWithGoogleUser?.user.uid)
+        );
+        if (docSnap.data()?.profile.usertype !== userType) {
+          toast.error("Not Authorised User!");
+          console.log("hhh");
           // navigate(-1)
-        } 
+        }
       }
     }
-    GetUserData()
-  },[signInWithEmailAndPasswordUser,signInWithGoogleUser])
+    GetUserData();
+  }, [signInWithEmailAndPasswordUser, signInWithGoogleUser]);
 
   const LoginWithGoogle = () => {
     console.log("Login with google");
