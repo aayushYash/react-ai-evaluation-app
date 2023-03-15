@@ -66,7 +66,6 @@ export default function LoginScreen() {
         if (docSnap.data()?.profile.usertype !== userType){
           toast.error('Not Authorised User!')
           console.log('hhh')
-          signOut(auth)
         } 
       }
       if(signInWithGoogleUser){
@@ -74,7 +73,6 @@ export default function LoginScreen() {
         if (docSnap.data()?.profile.usertype !== userType){
           toast.error('Not Authorised User!')
           console.log('hhh')
-          signOut(auth)
           // navigate(-1)
         } 
       }

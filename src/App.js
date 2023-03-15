@@ -22,7 +22,7 @@ import {
 import VerifyUser from "./screens/VerifyUser";
 import { auth, db } from "./firebase/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import StudentDashboard from "./screens/StudentDashboard";
+import StudentDashboard from "./screens/Student/StudentDashboard";
 import ManageProfile from "./screens/ManageProfile";
 import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
@@ -47,7 +47,6 @@ library.add(
 
 export default function App() {
 
-  const [verifiedEmail,setVerifiedEmail] = useState(auth.currentUser?.emailVerified)
 
   const [user, loading, error] = useAuthState(auth);
   const [userData,setUserData] = useState();
@@ -63,16 +62,20 @@ export default function App() {
       if(user && !userData){
         console.log(user.uid)
         const docSnap = await getDoc(doc(db,'users',user.uid));
-        console.log(docSnap.data())
+        console.log(docSnap.data(), "app line 65")
         setUserData(docSnap.data())
       }
     }
 
-    console.log(userData?.profile, 'profile')
+    console.log(userData?.profile, 'profile line 70')
 
     console.log(userData,'useeeeeeeeerrrdata')
+    console.log(user,'app line 73 user')
 
     readData()
+  }, [user])
+
+  useEffect(() => {
     if(user && !user.emailVerified){
       navigate('verifyEmail')
     }
@@ -84,16 +87,18 @@ export default function App() {
     if(user && user.emailVerified && userData?.profile.institute.length !== 0){
       navigate('StudentDashboard')
     }
-    if(user && selectedUserType !== userData?.profile.usertype){
+    if(user && userData && selectedUserType !== userData?.profile.usertype){
+      console.log(selectedUserType,"app line 88")
+      console.log(userData?.profile.usertype,"app line 89")
+      console.log('heheheheheh')
       signOut(auth)
       navigate('login')
     }
     if(!user){
+      setUserData(null)
       navigate('/')
     }
-
-    
-  }, [user,userData])
+  },[userData])
 
 
 

@@ -28,6 +28,8 @@ export default function RegisterScreen() {
   const [gender,setGender] = useState(null)
   const [validEmail, setValidEmail] = useState(true);
   const [validConfirmPassword, setValidConfirmPassword] = useState(true);
+  
+  const [user,userloading,usererror] = useAuthState(auth)
 
 
   const [updateProfile, updating, updatingError] = useUpdateProfile(auth);
@@ -43,7 +45,7 @@ export default function RegisterScreen() {
 
   
   // Registration Firebase Funtion Link
-  const RegisterHandler = () => {
+  const RegisterHandler = async () => {
 
     if(emailId.length === 0 || fullName.trim().length === 0 || password.trim().length === 0 || confirmedPassword.trim().length ===0 || institute.trim().length ===0 || gender === null){
       if(typeOfUser === 'Student' && (branchDepartment.trim().length === 0 || instituteRollNumber.trim().length === 0)) {
@@ -58,6 +60,8 @@ export default function RegisterScreen() {
       return  
     }
     createUserWithEmailAndPassword(emailId, password)
+   
+    
   }
 
   function SignUpWithGoogle() {
@@ -181,6 +185,15 @@ export default function RegisterScreen() {
     }
 
   }, [googleError,emaiandpasswordError])
+
+  useEffect(() => {
+    async function ProfileUpdate(){
+      const success = await updateProfile({displayName: fullName})
+    
+      console.log(success,"succccccccccccccccessssssss")
+    }
+    ProfileUpdate();
+  },[user])
 
 
 
