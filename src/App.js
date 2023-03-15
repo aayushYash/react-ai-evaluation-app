@@ -108,7 +108,7 @@ export default function App() {
       setUserData(null)
       navigate('/')
     }
-  },[userData])
+  },[userData,user])
 
 
 

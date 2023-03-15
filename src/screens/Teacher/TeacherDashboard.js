@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../components/general/Header";
 import Footer from "../../components/general/Footer";
 
 function TeacherDashboard() {
+
+  const [question,setQuestion] = useState([]);
+
+
   return (
     <div className=" bg-white">
       <Header />
