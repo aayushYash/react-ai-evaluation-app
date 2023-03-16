@@ -35,6 +35,7 @@ import { userState } from "./Atom/atom";
 import { signOut } from "firebase/auth";
 import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
 import TestAttemptPage from "./screens/Student/TestAttemptPage";
+import NewTestAdd from "./screens/Teacher/NewTestAdd";
 
 library.add(
   fas,
@@ -109,8 +110,9 @@ export default function App() {
 
   return (
     <Routes>
-      {/* <Route path="/" element={<LandingScreen />} /> */}
-      <Route path="/" element={<TestAttemptPage />} />
+      <Route path="/" element={<LandingScreen />} />
+      {/* <Route path="/" element={<TestAttemptPage />} /> */}
+      {/* <Route path="/" element={<NewTestAdd />} /> */}
 
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />
