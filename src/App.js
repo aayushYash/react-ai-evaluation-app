@@ -110,9 +110,9 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingScreen />} />
+      {/* <Route path="/" element={<LandingScreen />} /> */}
       {/* <Route path="/" element={<TestAttemptPage />} /> */}
-      {/* <Route path="/" element={<NewTestAdd />} /> */}
+      <Route path="/" element={<NewTestAdd />} />
 
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />

@@ -7,7 +7,7 @@ function NewTestAdd() {
   return (
     <div>
       <Header />
-      <div className=" h-screen w-full grid grid-cols-4 ">
+      <div className="  w-full flex flex-col md:grid grid-cols-4 ">
         <div className=" col-span-1 bg-gray-200 border-r-2 border-gray-600">
           <div className="px-6 flex flex-col border-b border-gray-700 pb-10 items-start space-y-2">
             <div className="relative pt-10 w-full px-2">
@@ -63,7 +63,7 @@ function NewTestAdd() {
           </div>
         </div>
 
-        <div className=" col-span-3 flex-col flex justify-center items-center ">
+        <div className=" col-span-3 flex-col p-3 flex justify-center items-center ">
           <img
             src="https://media.tenor.com/1t5F4JOye68AAAAC/amogus-sus.gif"
             alt=""
