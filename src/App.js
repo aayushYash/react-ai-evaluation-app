@@ -34,6 +34,8 @@ import { useRecoilValue } from "recoil";
 import { userState } from "./Atom/atom";
 import { signOut } from "firebase/auth";
 import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
+import TestAttemptPage from "./screens/Student/TestAttemptPage";
+import NewTestAdd from "./screens/Teacher/NewTestAdd";
 
 library.add(
   fas,
@@ -52,8 +54,6 @@ library.add(
 );
 
 export default function App() {
-
-
   const [user, loading, error] = useAuthState(auth);
   const [userData, setUserData] = useState();
   const selectedUserType = useRecoilValue(userState);
@@ -62,28 +62,26 @@ export default function App() {
   console.log("apppppppppppppppppppp", selectedUserType);
 
   useEffect(() => {
-
-    async function readData(){
-
-      if(user && !userData){
-        console.log(user.uid)
-        const docSnap = await getDoc(doc(db,'users',user.uid));
-        console.log(docSnap.data(), "app line 65")
-        setUserData(docSnap.data())
+    async function readData() {
+      if (user && !userData) {
+        console.log(user.uid);
+        const docSnap = await getDoc(doc(db, "users", user.uid));
+        console.log(docSnap.data(), "app line 65");
+        setUserData(docSnap.data());
       }
     }
 
-    console.log(userData?.profile, 'profile line 70')
+    console.log(userData?.profile, "profile line 70");
 
-    console.log(userData,'useeeeeeeeerrrdata')
-    console.log(user,'app line 73 user')
+    console.log(userData, "useeeeeeeeerrrdata");
+    console.log(user, "app line 73 user");
 
-    readData()
-  }, [user])
+    readData();
+  }, [user]);
 
   useEffect(() => {
-    if(user && !user.emailVerified){
-      navigate('verifyEmail')
+    if (user && !user.emailVerified) {
+      navigate("verifyEmail");
     }
     if (user && userData?.profile.institute.length === 0) {
       console.log(userData?.profile.institute);
@@ -97,24 +95,25 @@ export default function App() {
     ) {
       navigate("StudentDashboard");
     }
-    if(user && userData && selectedUserType !== userData?.profile.usertype){
-      console.log(selectedUserType,"app line 88")
-      console.log(userData?.profile.usertype,"app line 89")
-      console.log('heheheheheh')
-      signOut(auth)
-      navigate('login')
+    if (user && userData && selectedUserType !== userData?.profile.usertype) {
+      console.log(selectedUserType, "app line 88");
+      console.log(userData?.profile.usertype, "app line 89");
+      console.log("heheheheheh");
+      signOut(auth);
+      navigate("login");
     }
-    if(!user){
-      setUserData(null)
-      navigate('/')
+    if (!user) {
+      setUserData(null);
+      navigate("/");
     }
-  },[userData,user])
-
-
+  }, [userData, user]);
 
   return (
     <Routes>
       <Route path="/" element={<LandingScreen />} />
+      {/* <Route path="/" element={<TestAttemptPage />} /> */}
+      {/* <Route path="/" element={<NewTestAdd />} /> */}
+
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />
       <Route path="verifyEmail" element={<VerifyUser />} />
