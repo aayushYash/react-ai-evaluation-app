@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ToastContainer } from 'react-toastify';
@@ -20,6 +20,7 @@ export default function ManageProfile() {
     const [institute,setInstitute] = useState(null)
     const [branchDepartment, setBranchDepartment] = useState(null);
     const [instituteRollNumber,setInstituteRollNumber] = useState(null)
+    const [usertype,setUsertype] = useState(); 
 
     const [user,loading,error] = useAuthState(auth);
     const navigate = useNavigate()
@@ -37,25 +38,51 @@ export default function ManageProfile() {
     useEffect(()=>{
         async function ReadData() {
             const docSnap = await getDoc(doc(db,'users',user.uid));
-            console.log(docSnap.data())
+            if(docSnap.data().profile.usertype === "Student"){
+                setBranchDepartment(docSnap.data().profile.branchDepartment)
+                setInstituteRollNumber(docSnap.data().profile.instituteRollNumber)
+            }
             setInstitute(docSnap.data().profile.institute)
-            setBranchDepartment(docSnap.data().profile.branchDepartment)
-            setInstituteRollNumber(docSnap.data().profile.instituteRollNumber)
+            setUsertype(docSnap.data().profile.usertype)
+            
 
         }
-        console.log(user,"profile manageeeeeeeeeeeeee")
         if(user){
             setDisplayName(user.displayName);
             ReadData()
         }
     }, [user])
 
-    const SaveHandler = () => {
-
-        if(institute.length === 0 || instituteRollNumber.length === 0 || branchDepartment.length === 0){
+    const SaveHandler = async() => {
+        if(usertype === 'Student')
+        {
+            if(institute.length === 0 || instituteRollNumber.length === 0 || branchDepartment.length === 0 ){
             console.log('error')
             return
+            }
+            else{
+                await updateDoc(doc(db, 'users', user.uid),{
+                    profile: {
+                        institute: institute,
+                        instituteRollNumber : instituteRollNumber,
+                        branchDepartment : branchDepartment}
+                })
+            }
         }
+        if(usertype === 'Teacher'){
+            if(institute.length === 0)
+            {
+                return
+            }
+            else{
+                const suc = await updateDoc(doc(db, 'users', user.uid),{
+                    profile: {institute: institute,}
+                })
+                console.log('suc' ,suc,user.uid)
+            }
+        }
+
+        
         
         setProfileEditState(false)
     }
@@ -98,19 +125,19 @@ export default function ManageProfile() {
                         <td ><InputText valid={institute ? true : false} disabled={fieldDisable} val={institute ? institute: ''} width={250} onchange={(e) => setInstitute(e.target.value)}  /></td>
                         <td>  {!institute && <FontAwesomeIcon icon={`fa-solid fa-exclamation`} color='red' />} </td>
                     </tr>
-                    <tr>
+                    {usertype === "Student" && <tr>
                         <td className='td'>Branch/ Department</td>
                         <td>:</td>
 
                         <td><InputText valid={branchDepartment ? true : false} disabled={fieldDisable} val={branchDepartment ? branchDepartment: ''} width={250} onchange={(e) => setBranchDepartment(e.target.value)}  /></td>
                         <td >  {!branchDepartment && <FontAwesomeIcon icon={`fa-solid fa-exclamation`} color='red' />} </td>
-                    </tr>
-                    <tr>
+                    </tr>}
+                    {usertype === "Student" && <tr>
                         <td className='td'>College Roll Number</td>
                         <td>:</td>
                         <td><InputText valid={instituteRollNumber ? true : false} disabled={fieldDisable} val={instituteRollNumber ? instituteRollNumber: ''} width={250} onchange={(e) => setInstituteRollNumber(e.target.value)}  /></td>
                         <td>  {!instituteRollNumber && <FontAwesomeIcon icon={`fa-solid fa-exclamation`} color='red' />} </td>
-                    </tr>
+                    </tr>}
                     <tr>
                         <td colSpan={4} >
                             <div style={{display: 'flex',alignItems: 'center',justifyContent: 'center',width: '100%'}}>

@@ -52,6 +52,12 @@
     font-size: 24px;
 }
 
+.test-body{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 
 @media screen and (max-width: 450px) {
     .testResults .result legend{

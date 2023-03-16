@@ -1,5 +1,5 @@
 .button{
-    padding: clamp(12px,0.6vw,20px) clamp(14px,2vw,20px);
+    padding: 5px 9px;
     margin: 5px;
     font-size: 14px;
     font-weight: 600;

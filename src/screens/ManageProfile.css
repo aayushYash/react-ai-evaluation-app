@@ -4,6 +4,10 @@
     width: clamp(250px,90%,500px);
     height: fit-content;
     padding: 50px 5px 10px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .ProfileScreen{

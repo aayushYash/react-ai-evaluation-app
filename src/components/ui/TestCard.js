@@ -7,6 +7,7 @@ export default function TestCard({test}) {
     const [buttonTest,setButtonTest] = useState('')
 
     useEffect(() => {
+        console.log(test.status,"test card")
         if(test.status === 'live'){
             setButtonTest('Attempt')
         }
@@ -24,7 +25,7 @@ export default function TestCard({test}) {
         <h4 className='test-subtitle'>{test.subject}</h4>
         <h4 className='test-created-by'>Created By: {test.createdBy}</h4>
         <h2 className='test-duration'>{`Duration: ${test.duration} minutes`}</h2>
-        <h5 className='test-status'>{test.status}</h5>
+        <h5 className='test-status'>{test.statusText}</h5>
         <Button text={buttonTest} onclick={null} />
     </div>
   )
