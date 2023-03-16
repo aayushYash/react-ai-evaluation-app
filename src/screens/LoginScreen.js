@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
-import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth";
+import {
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 
 import Footer from "../components/general/Footer";
 import Header from "../components/general/Header";
@@ -27,18 +31,22 @@ export default function LoginScreen() {
   const [sendPasswordResetEmail, sending, errorPasswordReset] =
     useSendPasswordResetEmail(auth);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [id,setId] = useState()
-  const [success,setSuccess]= useState()
-  const [userType, setUserType] = useRecoilState(selectedTypeOfUser)
+  const [id, setId] = useState();
+  const [success, setSuccess] = useState();
+  const [userType, setUserType] = useRecoilState(selectedTypeOfUser);
   const [
     signInWithEmailAndPassword,
     signInWithEmailAndPasswordUser,
     signInWithEmailAndPasswordLoading,
     errorSignInWithEmail,
   ] = useSignInWithEmailAndPassword(auth);
-  const [signInWithGoogle, signInWithGoogleUser, signInWithGoogleLoading, signInWithGoogleError] = useSignInWithGoogle(auth);
+  const [
+    signInWithGoogle,
+    signInWithGoogleUser,
+    signInWithGoogleLoading,
+    signInWithGoogleError,
+  ] = useSignInWithGoogle(auth);
   const navigate = useNavigate();
-
 
   const onEmailChange = (e) => {
     setEmailId(e.target.value);
@@ -49,47 +57,48 @@ export default function LoginScreen() {
   };
 
   const ToggleHandler = (e) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setUserType(e.target.value);
   };
 
   // firebase functionality below 👇.
 
   const LoginHandler = () => {
-    signInWithEmailAndPassword(emailId,password)
+    signInWithEmailAndPassword(emailId, password);
   };
 
-  useEffect(()=>{
-    async function GetUserData(){
-      if(signInWithEmailAndPasswordUser){
-        const docSnap = await getDoc(doc(db,'users',signInWithEmailAndPasswordUser?.user.uid))
-        if (docSnap.data()?.profile.usertype !== userType){
-          toast.error('Not Authorised User!')
-          console.log('hhh')
-        } 
+  useEffect(() => {
+    async function GetUserData() {
+      if (signInWithEmailAndPasswordUser) {
+        const docSnap = await getDoc(
+          doc(db, "users", signInWithEmailAndPasswordUser?.user.uid)
+        );
+        if (docSnap.data()?.profile.usertype !== userType) {
+          toast.error("Not Authorised User!");
+          console.log("hhh");
+        }
       }
-      if(signInWithGoogleUser){
-        const docSnap = await getDoc(doc(db,'users',signInWithGoogleUser?.user.uid))
-        if (docSnap.data()?.profile.usertype !== userType){
-          toast.error('Not Authorised User!')
-          console.log('hhh')
+      if (signInWithGoogleUser) {
+        const docSnap = await getDoc(
+          doc(db, "users", signInWithGoogleUser?.user.uid)
+        );
+        if (docSnap.data()?.profile.usertype !== userType) {
+          toast.error("Not Authorised User!");
+          console.log("hhh");
           // navigate(-1)
-        } 
+        }
       }
     }
-    GetUserData()
-  },[signInWithEmailAndPasswordUser,signInWithGoogleUser])
+    GetUserData();
+  }, [signInWithEmailAndPasswordUser, signInWithGoogleUser]);
 
   const LoginWithGoogle = () => {
     signInWithGoogle();
   };
 
-
-
-  const ForgotHandler =  (email) => {
+  const ForgotHandler = (email) => {
     setSuccess(async () => await sendPasswordResetEmail(email));
     setPopupVisible(false);
-    
   };
 
   useEffect(() => {
@@ -98,25 +107,28 @@ export default function LoginScreen() {
     } else {
       setValidEmail(true);
     }
-    if(sending){
-        setId(() => toast.loading('Sending Mail, Wait'))
+    if (sending) {
+      setId(() => toast.loading("Sending Mail, Wait"));
+    } else if (errorPasswordReset) {
+      toast.update(id, {
+        render: errorPasswordReset?.code,
+        type: "error",
+        isLoading: false,
+        autoClose: true,
+      });
+    } else if (success) {
+      toast.update(id, {
+        render: "Mail Sent Successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: true,
+      });
     }
-    else if(errorPasswordReset){
-        toast.update(id,{render: errorPasswordReset?.code, type: 'error', isLoading: false, autoClose: true});
-    }
-    else if(success){
-        toast.update(id,{render: "Mail Sent Successfully", type: 'success', isLoading: false, autoClose: true})
-    }
-
-  }, [emailId,sending,errorPasswordReset,success]);
+  }, [emailId, sending, errorPasswordReset, success]);
 
   return (
     <div className="loginPage">
-       <ToastContainer
-       autoClose={2000}
-       closeOnClick
-       theme="colored"
-        />
+      <ToastContainer autoClose={2000} closeOnClick theme="colored" />
       {popupVisible && (
         <ResetPasswordPopup
           sendResetMailHandler={ForgotHandler}
@@ -182,7 +194,7 @@ const ResetPasswordPopup = ({ sendResetMailHandler, closePopup }) => {
 
   return (
     <div className="PopupBackGround">
-        <div className="Closepopup" onClick={closePopup} />
+      <div className="Closepopup" onClick={closePopup} />
       <div className="Popup" onClick={null}>
         <div style={{ marginBottom: "10px" }}>
           <h1 className="ResetTitle">Reset Password</h1>
@@ -195,7 +207,10 @@ const ResetPasswordPopup = ({ sendResetMailHandler, closePopup }) => {
             valid={true}
           />
         </div>
-        <Button text={"Send Reset Email"} onclick={() => sendResetMailHandler(email)} />
+        <Button
+          text={"Send Reset Email"}
+          onclick={() => sendResetMailHandler(email)}
+        />
       </div>
     </div>
   );
