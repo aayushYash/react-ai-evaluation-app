@@ -76,7 +76,8 @@ export default function ManageProfile() {
             }
             else{
                 const suc = await updateDoc(doc(db, 'users', user.uid),{
-                    profile: {institute: institute,}
+                    profile: {institute: institute,
+                    usertype : usertype}
                 })
                 console.log('suc' ,suc,user.uid)
             }

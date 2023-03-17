@@ -17,6 +17,7 @@ export default function StudentDashboard() {
     const [showMoreLiveTests,setShowMoreLiveTests] = useState(false)
     const [showMoreUpcomingTests,setShowMoreUpcomingTests] = useState(false)
     const [showMorePastTests,setShowMorePastTests] = useState(false)
+    const [userDataSnap,setUserDataSnap] = useState()
 
 
     const [tests,setTests] = useState([])
@@ -44,10 +45,12 @@ export default function StudentDashboard() {
 
     useEffect(() => {
         tests.forEach(async(test) => {
-            const testDetail = await getDoc(doc(db,'testDetails',test))
+            const testDetail = await getDoc(doc(db,'testDetails',test.testid))
             const starttime = new Date(testDetail.data().starttime.seconds*1000);
             const endtime = new Date(testDetail.data().endtime.seconds*1000)
             const currenttime = Date.now();
+
+            console.log(testDetail.data().attempted,"detailllllllllllllllllllllllllll")
 
             const createdBy = await getDoc(doc(db,'users',testDetail.data().createdBy))
             const groupId  = await getDoc(doc(db,'group',testDetail.data().assignedTo))
@@ -59,6 +62,9 @@ export default function StudentDashboard() {
             if(starttime < currenttime && currenttime < endtime){
                 const time = TimeFormatter(currenttime,starttime)
                 status = 'live'
+                if(userDataSnap.tests.filter(test => test.testid === testDetail.id)[0].attempted){
+                    status = 'past'
+                }
                 statusText = `Started ${time} ago`
             }
             if(currenttime < starttime){
@@ -72,6 +78,8 @@ export default function StudentDashboard() {
                 status = 'past'
                 statusText = `Ended ${time} ago`
             }
+            
+            console.log(userDataSnap,userDataSnap.tests.filter(test => test.testid === testDetail.id)[0].attempted,"userrrrrrrrrrrrrrrrrrrrrsnapppppppppppppppppp")
             const data = {
                 id: testDetail.id,
                 title : testDetail.data().title,
@@ -81,8 +89,7 @@ export default function StudentDashboard() {
                 status: status,
                 statusText: statusText
             }
-
-            if(status === 'live'){
+            if(status === 'live' && !data.attempted){
                 setLiveTests((prev) => {
                     const arr = prev.filter((d) => d.id !== data.id)
                     return [...arr,data]
@@ -102,7 +109,7 @@ export default function StudentDashboard() {
             }
         })
         console.log(pastTests, "past testsss")
-        console.log(pastTests)
+        console.log(tests,"lasttttttttttt")
     }, [tests])
 
 
@@ -110,12 +117,15 @@ export default function StudentDashboard() {
     useEffect(() => {
         
         async function FetchData(){
-            const docSnap = await getDoc(doc(db,'users',user.uid))
-            console.log(user.uid,'fetch')
-            setTests(() => docSnap.data().tests)
+            console.log(user?.uid,'fetch')
+            if(!user) return
+            const docSnap = await getDoc(doc(db,'users',user?.uid))
+            console.log(docSnap.data().tests)
+            setTests(() => docSnap?.data().tests)
+            setUserDataSnap(docSnap?.data())
         }
         FetchData()
-    }, [])
+    }, [user])
     console.log('hehe')
     return (
     <div className='StudentDashboardScreen'>

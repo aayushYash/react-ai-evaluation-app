@@ -4,13 +4,15 @@ import {
   Route,
   Routes,
   useNavigate,
+  useLocation,
+  
 } from "react-router-dom";
 import LandingScreen from "./screens/LandingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { fas } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, fas } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser,
   faLock,
@@ -36,6 +38,7 @@ import { signOut } from "firebase/auth";
 import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
 import TestAttemptPage from "./screens/Student/TestAttemptPage";
 import NewTestAdd from "./screens/Teacher/NewTestAdd";
+import EvaluateTest from "./screens/Teacher/EvaluateTest";
 
 library.add(
   fas,
@@ -50,7 +53,8 @@ library.add(
   faEyeSlash,
   faCalendar,
   faPen,
-  faExclamation
+  faExclamation,
+  faAdd,
 );
 
 export default function App() {
@@ -80,33 +84,45 @@ export default function App() {
   }, [user]);
 
   useEffect(() => {
+    console.log(userData, "users dasta usefeffeff plzdf")
     if (user && !user.emailVerified) {
       navigate("verifyEmail");
     }
     if (user && userData?.profile.institute.length === 0) {
       console.log(userData?.profile.institute);
       console.log("profileeeeeee");
-      navigate("Profile");
+      navigate(`${user.uid}/Profile`);
     }
     if (
       user &&
       user.emailVerified &&
-      userData?.profile.institute.length !== 0
+      userData?.profile.institute.length !== 0 && userData?.profile.usertype === 'Student'
     ) {
-      navigate("StudentDashboard");
+      navigate(`${user.uid}/StudentDashboard`);
+    }
+    if (
+      user &&
+      user.emailVerified &&
+      userData?.profile.institute.length !== 0 && userData?.profile.usertype === 'Teacher'
+    ) {
+      navigate(`${user.uid}/TeacherDashboard`);
     }
     if (user && userData && selectedUserType !== userData?.profile.usertype) {
       console.log(selectedUserType, "app line 88");
       console.log(userData?.profile.usertype, "app line 89");
       console.log("heheheheheh");
-      signOut(auth);
-      navigate("login");
+      // signOut(auth);
+      // navigate("login");
     }
     if (!user) {
       setUserData(null);
       navigate("/");
     }
   }, [userData, user]);
+
+  
+
+  // console.log()
 
   return (
     <Routes>
@@ -117,9 +133,17 @@ export default function App() {
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />
       <Route path="verifyEmail" element={<VerifyUser />} />
-      <Route path="StudentDashboard" element={<StudentDashboard />} />
-      <Route path="Profile" element={<ManageProfile />} />
-      <Route path="TeacherDashboard" element={<TeacherDashboard />} />
+      <Route path=":userid" >
+        <Route path="StudentDashboard" element={<StudentDashboard />} />
+        <Route path="Profile" element={<ManageProfile />} />
+        <Route path="TeacherDashboard" element={<TeacherDashboard />} />
+        <Route path="test">
+          <Route path=":testid" element={<TestAttemptPage />}  />
+        </Route>
+        <Route path="evaluatetest">
+          <Route path=":testid" element={<EvaluateTest />}  />
+        </Route>
+      </Route>
     </Routes>
   );
 }

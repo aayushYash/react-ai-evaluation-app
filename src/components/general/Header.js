@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import Button from "../ui/Button";
 import "./Header.css";
@@ -63,7 +63,7 @@ const UserProfile = ({signout, user, children}) => {
       <Avatar user={user} />
     </div>
     <div style={{'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
-    <Link to="/Profile">User Profile</Link>
+    <Link to={`/${user.uid}/Profile`}>User Profile</Link>
     <p>Change Password</p>
     </div>
     {children}

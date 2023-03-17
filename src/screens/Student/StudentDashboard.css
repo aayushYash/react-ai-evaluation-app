@@ -21,6 +21,33 @@
     /* border: 1px solid white; */
 }
 
+.test-create-ongoing-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.test-create{
+    background-color: #01082D;
+    width: 180px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    border-radius: 8px;
+    min-height: 180px;
+    color: #fff;
+}
+
+.test-create-container{
+    border-right: 1px solid #000;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
 .greeting-msg{
     font-weight: bold;
     font-size: 28px;

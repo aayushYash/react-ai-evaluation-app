@@ -98,6 +98,7 @@ export default function RegisterScreen() {
       }})
     }
     if(typeOfUser === 'Teacher' && googleUser){
+      console.log('sested data')
       setDoc(doc(db,'users',googleUser?.user.uid), {profile: {
         name: googleUser?.user.displayName,
         email: googleUser?.user.email,
