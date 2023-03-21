@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./InputText.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function InputText({ val, onchange, icon, type, placeholder, valid, invalidMsg, disabled,width }) {
+export default function InputText({ val, onchange, icon, type, placeholder, valid, invalidMsg, disabled,width,maxlength,max }) {
   const [fieldType, setFieldType] = useState(type);
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
@@ -25,13 +25,15 @@ export default function InputText({ val, onchange, icon, type, placeholder, vali
     }
   };
 
+  console.log(fieldType,type,width)
+
   return (
-    <div className="inputtextContainer p-4" style={width ? {width: `${width}px` } : null} >
+    <div className="inputtextContainer" style={width ? {width: `${width}px` } : null} >
 
       {icon && <FontAwesomeIcon icon={`${icon}`} className="icon" />}
       <div style={{display: 'flex', flexDirection: 'column', position: 'relative'}}>
       <input
-        type={fieldType}
+        type={type}
         value={val}
         onChange={onchange}
         className="inputtext"
@@ -39,6 +41,9 @@ export default function InputText({ val, onchange, icon, type, placeholder, vali
         disabled={disabled}
         style={{borderColor: bordercolor}}
         autoComplete={'false'}
+        maxLength={maxlength? maxlength: null}
+        max={max? max: null}
+        min={type === 'number' ? 1 : null}
       />
       {!valid && <p style={{fontSize: '12px', position: 'absolute', bottom: '-22px', fontWeight: 500, color: 'red'}}>{invalidMsg}</p>}
       </div>

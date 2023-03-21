@@ -6,77 +6,73 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../../firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export default function TestCard({test}) {
+export default function TestCard({userid,usertype,test}) {
 
     const [userData,setUserData] = useState()
 
     const [buttonTest,setButtonTest] = useState('')
 
     const navigate = useNavigate();
-    const [user,loading,error] = useAuthState(auth)
 
     function clickHandle() {
         if(test?.status === 'live'){
-            if(userData?.usertype==='Student')
-            {
-                navigate(`/${user.uid}/test/${test.id}`, {replace: false})
+            if(usertype==='Student')
+            {   
+                navigate(`/${userid}/${usertype}/test/${test.id}`, {replace: false})
             }
-            if(userData?.usertype==='Teacher'){
-                navigate(`/${user.uid}/test/${test.id}`)
+            if(usertype==='Teacher'){
+                navigate(`/${userid}/${usertype}/test/${test.id}`)
             }
         }
         if(test?.status === 'past'){
-            if(userData?.usertype==='Student')
+            if(usertype==='Student')
             {
-                navigate(`/${user.uid}/test/${test.id}`, {replace: false})
+                navigate(`/${userid}/${usertype}/checkresult/${test.id}`, {replace: false})
             }
-            if(userData?.usertype==='Teacher'){
-                navigate(`/${user.uid}/evaluatetest/${test.id}`)
+            if(usertype==='Teacher'){
+                navigate(`/${userid}/${usertype}/evaluatetest/${test.id}`)
             }
         }
-        if(test?.status === 'upcoming'){
-            setButtonTest('Explore')
-        }
+        
     }
 
-    useEffect(() => {
-        async function ReadUserData() {
-            if(user){
-                const userdata = await (await getDoc(doc(db,'users',user?.uid)))
-                setUserData(() => userdata.data().profile )
-            }
-        }
-        ReadUserData()
-    },[user])
+
     
     useEffect(() => {
-        console.log(userData,"test card user data")
+        async function ReadUserData() {
+            const userdata = await getDoc(doc(db, 'users', userid))
+            setUserData(() => userdata.data().profile )
+        
+        }
+        ReadUserData()
         if(test?.status === 'live'){
-            if(userData?.usertype==='Student'){
+            if(usertype==='Student'){
                 setButtonTest('Attempt')
             }
-            if(userData?.usertype==='Teacher'){
+            if(usertype==='Teacher'){
                 setButtonTest('Update')
             }
         }
         if(test?.status === 'past'){
-            if(userData?.usertype==='Student'){
+            if(usertype==='Student'){
                 setButtonTest('Check Result')
             }
-            if(userData?.usertype==='Teacher'){
+            if(usertype==='Teacher'){
                 setButtonTest('Evaluate')
             }
         }
         if(test?.status === 'upcoming'){
-            if(userData?.usertype==='Student'){
+            if(usertype==='Student'){
                 setButtonTest('Explore')
             }
-            if(userData?.usertype==='Teacher'){
+            if(usertype==='Teacher'){
                 setButtonTest('Edit')
             }
         }
 
-    }, [userData])
+    }, [])
+
+
 
   return (
     <div className='card-container'>

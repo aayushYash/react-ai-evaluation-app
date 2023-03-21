@@ -91,20 +91,21 @@ export default function RegisterScreen() {
         name: googleUser?.user.displayName,
         email: googleUser?.user.email,
         institute: '',
+        photourl: googleUser?.user.photoURL,
         usertype: typeOfUser,
-        gender: '',
         branchDepartment : '',
-        instituteRollNumber: ''
+        instituteRollNumber: '',
+        session: '',
       }})
     }
     if(typeOfUser === 'Teacher' && googleUser){
-      console.log('sested data')
       setDoc(doc(db,'users',googleUser?.user.uid), {profile: {
         name: googleUser?.user.displayName,
         email: googleUser?.user.email,
         institute: '',
         usertype: typeOfUser,
-        gender: '',
+        photourl: googleUser?.user.photoURL,
+        session: '  '
       }})
     }
   }
@@ -186,16 +187,6 @@ export default function RegisterScreen() {
     }
 
   }, [googleError,emaiandpasswordError])
-
-  useEffect(() => {
-    async function ProfileUpdate(){
-      const success = await updateProfile({displayName: fullName})
-    
-      console.log(success,"succccccccccccccccessssssss")
-    }
-    ProfileUpdate();
-  },[user])
-
 
 
   return (

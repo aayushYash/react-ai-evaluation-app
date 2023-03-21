@@ -1,0 +1,88 @@
+.user-card{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #fff;
+    flex-wrap: wrap;
+    background-color: #8f8e8e;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+.group-screen{
+    display: flex;
+    flex-direction: column;
+}
+
+.group{
+    width: 100%;
+    margin: 20px 10px;
+    width: clamp(350px,90%,750px);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-top: 1px solid #000;
+}
+
+.group-card{
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    background-color: #01082D;
+    color: #fff;
+    border-radius: 8px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.group-name,.group-membes,.tests-assigned{
+    text-align: center;
+}
+
+.group-name{
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.group-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+}
+
+.group-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: clamp(350px,90%,750px);
+    margin: 30px 0;
+    padding: 10px 0;
+    border-top: 1px solid #000;
+    /* background-color: #9a9898; */
+    
+}
+legend{
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 19px;
+}
+.add-members{
+    padding: 10px 0;
+    border-top: 1px solid #000;
+    width: 100%;
+}
+
+.user-name{
+    font-size: 20px;
+    font-weight: bold;
+}
+.user-id{
+    font-size: 12px;
+    color: #fff
+}

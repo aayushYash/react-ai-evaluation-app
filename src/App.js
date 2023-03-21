@@ -4,15 +4,13 @@ import {
   Route,
   Routes,
   useNavigate,
-  useLocation,
-  
 } from "react-router-dom";
 import LandingScreen from "./screens/LandingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faAdd, fas } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faBackward, faForward, fas, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser,
   faLock,
@@ -39,6 +37,9 @@ import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
 import TestAttemptPage from "./screens/Student/TestAttemptPage";
 import NewTestAdd from "./screens/Teacher/NewTestAdd";
 import EvaluateTest from "./screens/Teacher/EvaluateTest";
+import TestSubmitted from "./screens/Student/TestSubmitted";
+import CheckResult from "./screens/Student/CheckResult";
+import Group from "./screens/Teacher/Group";
 
 library.add(
   fas,
@@ -55,6 +56,9 @@ library.add(
   faPen,
   faExclamation,
   faAdd,
+  faBackward,
+  faForward,
+  faTimesCircle
 );
 
 export default function App() {
@@ -63,49 +67,39 @@ export default function App() {
   const selectedUserType = useRecoilValue(userState);
   const navigate = useNavigate();
 
-  console.log("apppppppppppppppppppp", selectedUserType);
 
   useEffect(() => {
     async function readData() {
       if (user && !userData) {
-        console.log(user.uid);
         const docSnap = await getDoc(doc(db, "users", user.uid));
-        console.log(docSnap.data(), "app line 65");
         setUserData(docSnap.data());
       }
     }
-
-    console.log(userData?.profile, "profile line 70");
-
-    console.log(userData, "useeeeeeeeerrrdata");
-    console.log(user, "app line 73 user");
 
     readData();
   }, [user]);
 
   useEffect(() => {
-    console.log(userData, "users dasta usefeffeff plzdf")
     if (user && !user.emailVerified) {
-      navigate("verifyEmail");
+      navigate(`${user.uid}/verifyEmail`);
     }
     if (user && userData?.profile.institute.length === 0) {
       console.log(userData?.profile.institute);
-      console.log("profileeeeeee");
       navigate(`${user.uid}/Profile`);
     }
     if (
       user &&
       user.emailVerified &&
-      userData?.profile.institute.length !== 0 && userData?.profile.usertype === 'Student'
+      userData?.profile.institute.length !== 0 && userData?.profile.usertype === 'Student' && !loading
     ) {
-      navigate(`${user.uid}/StudentDashboard`);
+      navigate(`${user.uid}/Student/Dashboard`);
     }
     if (
       user &&
       user.emailVerified &&
-      userData?.profile.institute.length !== 0 && userData?.profile.usertype === 'Teacher'
+      userData?.profile.institute.length !== 0 && userData?.profile.usertype === 'Teacher' && !loading
     ) {
-      navigate(`${user.uid}/TeacherDashboard`);
+      navigate(`${user.uid}/Teacher/Dashboard`);
     }
     if (user && userData && selectedUserType !== userData?.profile.usertype) {
       console.log(selectedUserType, "app line 88");
@@ -120,28 +114,38 @@ export default function App() {
     }
   }, [userData, user]);
 
+  if(loading){
+    return <p>LOADING....................</p>
+  }
+
   
 
   // console.log()
 
   return (
     <Routes>
-      {/* <Route path="/" element={<LandingScreen />} /> */}
-      {/* <Route path="/" element={<TestAttemptPage />} /> */}
-      <Route path="/" element={<NewTestAdd />} />
-
+      <Route path="/" element={<LandingScreen />} />
       <Route path="login" element={<LoginScreen />} />
       <Route path="register" element={<RegisterScreen />} />
-      <Route path="verifyEmail" element={<VerifyUser />} />
       <Route path=":userid" >
-        <Route path="StudentDashboard" element={<StudentDashboard />} />
-        <Route path="Profile" element={<ManageProfile />} />
-        <Route path="TeacherDashboard" element={<TeacherDashboard />} />
-        <Route path="test">
-          <Route path=":testid" element={<TestAttemptPage />}  />
-        </Route>
-        <Route path="evaluatetest">
-          <Route path=":testid" element={<EvaluateTest />}  />
+        <Route path=":usertype">
+          <Route path="group" element={<Group />} />
+          <Route path="Dashboard" element={userData?.profile.usertype === 'Student' ? <StudentDashboard />:<TeacherDashboard />} />
+          <Route path="verifyEmail" element={<VerifyUser />} />
+          <Route path="Profile" element={<ManageProfile />} />
+          <Route path="AddTest" element={<NewTestAdd />} />
+          <Route path="test">
+            <Route path=":testid" element={<TestAttemptPage />}  />
+          </Route>
+          <Route path="ResponseSubmitted">
+            <Route path=":testid" element={<TestSubmitted />}  />
+          </Route>
+          <Route path="evaluatetest">
+            <Route path=":testid" element={<EvaluateTest />}  />
+          </Route>
+          <Route path="checkresult">
+            <Route path=":testid" element={<CheckResult />}  />
+          </Route>
         </Route>
       </Route>
     </Routes>

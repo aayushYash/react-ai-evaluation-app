@@ -6,11 +6,11 @@
     height: 40px;
     margin: 5px 0;
     width: 300px;
-    position: relative;
+    position: relative;;
 }
 
 .inputtext{
-    background-color: transparent;
+    background-color: #fff;
     /* border: none; */
     outline: none;
     border-width: 0.5px;

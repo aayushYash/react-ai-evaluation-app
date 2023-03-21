@@ -5,7 +5,7 @@ import { auth, db } from '../../firebase/firebase'
 import TestCard from '../../components/ui/TestCard'
 import "./StudentDashboard.css"
 import Button from '../../components/ui/Button'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {getDoc,doc} from 'firebase/firestore'
 
 export default function StudentDashboard() {
@@ -22,7 +22,9 @@ export default function StudentDashboard() {
 
     const [tests,setTests] = useState([])
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    const {userid,usertype} = useParams();
 
 
     function TimeFormatter(time1,time2) {
@@ -45,17 +47,15 @@ export default function StudentDashboard() {
 
     useEffect(() => {
         tests.forEach(async(test) => {
-            const testDetail = await getDoc(doc(db,'testDetails',test.testid))
-            const starttime = new Date(testDetail.data().starttime.seconds*1000);
-            const endtime = new Date(testDetail.data().endtime.seconds*1000)
+            const testDetail = await getDoc(doc(db,'testDetails',test?.testid))
+            const starttime = new Date(testDetail.data()?.starttime?.seconds*1000);
+            const endtime = new Date(testDetail.data()?.endtime?.seconds*1000)
             const currenttime = Date.now();
 
-            console.log(testDetail.data().attempted,"detailllllllllllllllllllllllllll")
 
             const createdBy = await getDoc(doc(db,'users',testDetail.data().createdBy))
             const groupId  = await getDoc(doc(db,'group',testDetail.data().assignedTo))
 
-            console.log(tests.length)
 
             var status,statusText;
 
@@ -79,7 +79,6 @@ export default function StudentDashboard() {
                 statusText = `Ended ${time} ago`
             }
             
-            console.log(userDataSnap,userDataSnap.tests.filter(test => test.testid === testDetail.id)[0].attempted,"userrrrrrrrrrrrrrrrrrrrrsnapppppppppppppppppp")
             const data = {
                 id: testDetail.id,
                 title : testDetail.data().title,
@@ -108,8 +107,6 @@ export default function StudentDashboard() {
                 })
             }
         })
-        console.log(pastTests, "past testsss")
-        console.log(tests,"lasttttttttttt")
     }, [tests])
 
 
@@ -117,21 +114,24 @@ export default function StudentDashboard() {
     useEffect(() => {
         
         async function FetchData(){
-            console.log(user?.uid,'fetch')
             if(!user) return
             const docSnap = await getDoc(doc(db,'users',user?.uid))
-            console.log(docSnap.data().tests)
             setTests(() => docSnap?.data().tests)
             setUserDataSnap(docSnap?.data())
         }
         FetchData()
     }, [user])
-    console.log('hehe')
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setUpdateTimer(prev => prev+1)
+    //         console.log()
+    //     }, 1000);
+    
+    //     return () => clearInterval(interval);
+    //   }, []);
     return (
     <div className='StudentDashboardScreen'>
-        <Header>
-            <p style={{color: '#fff',marginRight: '15px',cursor: 'pointer'}} onClick={() => navigate('Group')}> Go to Group </p>
-        </Header>
+        <Header />
         <div className='StudentDashboardBody'>
             <div className='greeting-msg'>
                 <p className='msg'>Hi , {user?.displayName}</p>
@@ -149,10 +149,11 @@ export default function StudentDashboard() {
                 <div className='tests-body'>
                     {liveTests.length === 0 ? <p>No Ongoing Tests</p> : liveTests.map((test,index) => {
                         console.log(test,index,"line 51 student dash")
-                        return <TestCard test={test} key={index} />
+                        return <TestCard userid={userid
+                        } usertype={usertype} test={test} key={index} />
                     })
                     }
-                    {liveTests.length >= 4 && <p onClick={() => setShowMoreLiveTests((prevState) => !prevState)}>{showMoreLiveTests ?"Show More" : "Show Less"}</p>}
+                    {liveTests.length >= 4 && <p onClick={() => setShowMoreLiveTests((prevState) => !prevState)}>{showMoreLiveTests ?"Show Less" : "Show More"}</p>}
                 </div>
             </fieldset>
             <fieldset className='tests live-tests'>
@@ -160,10 +161,11 @@ export default function StudentDashboard() {
                 <div className='tests-body'>
                     {upcomingTests.length === 0 ? <p>No Upcoming Tests</p> : upcomingTests.map((test,index) => {
                         console.log(test,index)
-                        return <TestCard test={test} key={index} />
+                        return <TestCard userid={userid
+                        } usertype={usertype} test={test} key={index} />
                     })
                     }
-                    {upcomingTests.length >= 4 && <p onClick={() => setShowMoreUpcomingTests((prevState) => !prevState)}>{showMoreUpcomingTests ?"Show More" : "Show Less"}</p>}
+                    {upcomingTests.length >= 4 && <p onClick={() => setShowMoreUpcomingTests((prevState) => !prevState)}>{showMoreUpcomingTests ? "Show Less" : "Show More"}</p>}
                 </div>
             </fieldset>
             <fieldset className='tests live-tests'>
@@ -171,10 +173,11 @@ export default function StudentDashboard() {
                 <div className='tests-body'>
                     {pastTests.length === 0 ? <p>No Past Tests</p> : pastTests.map((test,index) => {
                         console.log(test,index)
-                        return <TestCard test={test} key={index} />
+                        return <TestCard userid={userid
+                        } usertype={usertype} test={test} key={index} />
                     })
                     }
-                    {pastTests.length >= 4 && <p onClick={() => setShowMorePastTests((prevState) => !prevState)}>{showMorePastTests ?"Show More" : "Show Less"}</p>}
+                    {pastTests.length >= 4 && <p onClick={() => setShowMorePastTests((prevState) => !prevState)}>{showMorePastTests ?"Show Less" : "Show More"}</p>}
                 </div>
             </fieldset>
         </div>

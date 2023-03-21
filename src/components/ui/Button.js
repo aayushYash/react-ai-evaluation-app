@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import "./Button.css";
 
-export default function Button({ text, type, onclick,icon }) {
+export default function Button({ text, type, onclick,icon,disabled }) {
   const [color, setColor] = useState("#fff");
   const [bgcolor, setBgcolor] = useState("#01082D");
 
@@ -15,10 +15,14 @@ export default function Button({ text, type, onclick,icon }) {
       setColor("#01082D");
       setBgcolor("#fff");
     }
+    if(disabled){
+      setColor("#aaa");
+      setBgcolor("#2c3875");
+    }
   }, [type]);
 
   return (
-    <div onClick={onclick}
+    <div onClick={disabled ? null : onclick}
         className="button"
         style={{
           color: `${color}`,

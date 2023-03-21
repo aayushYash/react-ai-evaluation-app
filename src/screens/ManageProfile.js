@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Header from '../components/general/Header';
 import Button from '../components/ui/Button';
 import InputText from '../components/ui/InputText';
 import { auth, db } from '../firebase/firebase';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import './ManageProfile.css'
 
 export default function ManageProfile() {
@@ -15,12 +15,14 @@ export default function ManageProfile() {
     const [profileEditState,setProfileEditState] = useState(false)
     const [fieldDisable, setFieldDisabled] = useState(true)
 
+    const {userid,usertype} = useParams(); 
+
 
     const [displayName,setDisplayName] = useState('');
     const [institute,setInstitute] = useState(null)
     const [branchDepartment, setBranchDepartment] = useState(null);
     const [instituteRollNumber,setInstituteRollNumber] = useState(null)
-    const [usertype,setUsertype] = useState(); 
+    const [userdata,setUserdata] = useState();
 
     const [user,loading,error] = useAuthState(auth);
     const navigate = useNavigate()
@@ -37,33 +39,27 @@ export default function ManageProfile() {
 
     useEffect(()=>{
         async function ReadData() {
-            const docSnap = await getDoc(doc(db,'users',user.uid));
-            if(docSnap.data().profile.usertype === "Student"){
-                setBranchDepartment(docSnap.data().profile.branchDepartment)
-                setInstituteRollNumber(docSnap.data().profile.instituteRollNumber)
-            }
-            setInstitute(docSnap.data().profile.institute)
-            setUsertype(docSnap.data().profile.usertype)
-            
-
+            const docSnap = await getDoc(doc(db,'users',userid));
+            setUserdata(docSnap.data().profile)
         }
-        if(user){
-            setDisplayName(user.displayName);
-            ReadData()
-        }
-    }, [user])
+        ReadData()
+        
+    }, [])
 
     const SaveHandler = async() => {
         if(usertype === 'Student')
         {
             if(institute.length === 0 || instituteRollNumber.length === 0 || branchDepartment.length === 0 ){
-            console.log('error')
-            return
+                toast.error('Fill All The Fields')
+                return
             }
             else{
-                await updateDoc(doc(db, 'users', user.uid),{
+                await updateDoc(doc(db, 'users', userid),{
                     profile: {
+                        name: userdata.name,
+                        email: userdata.email,
                         institute: institute,
+                        usertype: usertype,                    
                         instituteRollNumber : instituteRollNumber,
                         branchDepartment : branchDepartment}
                 })
@@ -72,20 +68,26 @@ export default function ManageProfile() {
         if(usertype === 'Teacher'){
             if(institute.length === 0)
             {
+                toast.error('Fill All The Fields')
                 return
             }
             else{
-                const suc = await updateDoc(doc(db, 'users', user.uid),{
-                    profile: {institute: institute,
-                    usertype : usertype}
+                const suc = await updateDoc(doc(db, 'users', userid),{
+                    profile: {
+                        institute: institute,
+                        usertype : usertype,
+                        name: userdata.name,
+                        email: userdata.email,
+                    }
                 })
-                console.log('suc' ,suc,user.uid)
+                console.log('suc' ,suc,userid)
             }
         }
 
         
         
         setProfileEditState(false)
+        toast.success('Profile Updated')
     }
 
 
@@ -100,7 +102,7 @@ export default function ManageProfile() {
                 <div style={{backgroundColor: '#01082D', height: '35px', width: '35px', display: 'grid',placeItems: 'center', borderRadius: '50%'}}>
                     <FontAwesomeIcon icon={'fa-solid fa-pen'} color='#fff'  />
                 </div>
-                <div>{displayName}</div>
+                <div>{userdata?.name}</div>
             </div>
             <div>
                 <table className='table'>
@@ -110,7 +112,7 @@ export default function ManageProfile() {
                         <td className='td'>Email Id</td>
                         <td>:</td>
 
-                        <td> <InputText valid={true} disabled={true} val={user?.email} width={250} /> </td>
+                        <td> <InputText valid={true} disabled={true} val={userdata?.email} width={250} /> </td>
                     </tr>
                     <tr>
                         <td colSpan={4}>

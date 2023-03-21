@@ -1,6 +1,6 @@
 .card-container{
     background-color: #fff;
-    width: 180px;
+    width: 170px;
     padding: 5px 8px;
     display: flex;
     flex-direction: column;
@@ -8,6 +8,9 @@
     align-items: center;
     border-radius: 8px;
     min-height: 180px;
+    margin: 0 10px 10px 0;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0,0,0,0.22) 0px 10px 10px;
 }
 
 .test-title{

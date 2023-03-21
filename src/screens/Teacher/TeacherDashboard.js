@@ -7,9 +7,13 @@ import TestCard from "../../components/ui/TestCard";
 import { doc, getDoc } from "firebase/firestore";
 import '../Student/StudentDashboard.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate, useParams } from "react-router-dom";
+import Button from "../../components/ui/Button";
 
 function TeacherDashboard() {
 
+
+  const {userid, usertype} = useParams();
   const [question,setQuestion] = useState([]);
   const [user,loading,error] = useAuthState(auth)
   
@@ -18,6 +22,7 @@ function TeacherDashboard() {
   const [upcomingTests,setUpcomingTests] = useState([]);
   const [tests,setTests] = useState([])
   const [userDataSnap,setUserDataSnap] = useState()
+  const navigate = useNavigate()
 
   function TimeFormatter(time1,time2) {
     const distance = time1 - time2
@@ -56,9 +61,6 @@ function TeacherDashboard() {
         if(starttime < currenttime && currenttime < endtime){
             const time = TimeFormatter(currenttime,starttime)
             status = 'live'
-            // if(userDataSnap.tests.filter(test => test.testid === testDetail.id)[0].attempted){
-            //     status = 'past'
-            // }
             statusText = `Started ${time} ago`
         }
         if(currenttime < starttime){
@@ -85,8 +87,6 @@ function TeacherDashboard() {
 
 
 
-        console.log(data,"daaaaaaaaaaaaataaaaaaaaaaaaaaaaaaaaaaaa")
-
         if(status === 'live' && !data.attempted){
             setLiveTests((prev) => {
                 const arr = prev.filter((d) => d.id !== data.id)
@@ -112,27 +112,34 @@ function TeacherDashboard() {
   useEffect(() => {
         
     async function FetchData(){
-        console.log(user?.uid,'fetch')
-        if(!user) return
-        const docSnap = await getDoc(doc(db,'users',user?.uid))
+        console.log(userid,'fetch')
+        // if(!user) return
+        const docSnap = await getDoc(doc(db,'users',userid))
         console.log(docSnap.data().tests)
         setTests(() => docSnap?.data().tests)
-        setUserDataSnap(docSnap?.data())
+        setUserDataSnap(docSnap?.data().profile)
     }
     FetchData()
-}, [user])
+    console.log(userDataSnap,"snap of user datta")
+}, [])
 
 
   return (
     <div className="StudentDashboardScreen">
-      <Header />
+      <Header >
+        <Button text={'Group'}  onclick={() => navigate(`/${userid}/${usertype}/group`,{
+          state:{
+            institute: userDataSnap?.institute,
+          }
+        })} />
+      </Header>
       <div className="StudentDashboardBody">
         <div className="greeting-msg">
-          <p>{`Hi, ${user?.displayName}`}</p>
+          <p>{`Hi, hello`}</p>
         </div>
         <div className="test-create-ongoing-container">
           <div className="test-create-container">
-            <div className="test-create"><FontAwesomeIcon
+            <div className="test-create" onClick={() => navigate(`/${userid}/${usertype}/AddTest`)}><FontAwesomeIcon
               icon={"add"}
               fontSize={"40px"}
               color={'#fff'}
@@ -142,10 +149,8 @@ function TeacherDashboard() {
           </div>
           <div className="test-ongoing-container">
             <h2 className="test-heading">Ongoing Tests</h2>
-          {liveTests.length === 0 ? <p>No Ongoing Tests</p> : liveTests.map((test,index) => {
-                        console.log(test,index,"line 51 student dash")
-                        return <TestCard test={test} key={index} />
-                    })
+          {liveTests.length === 0 ? <p>No Ongoing Tests</p> : liveTests.map((test,index) => <TestCard userid={userid} usertype={usertype} test={test} key={index} />
+                    )
                     }
           </div>
           </div>
@@ -153,19 +158,16 @@ function TeacherDashboard() {
           <fieldset className='tests live-tests'>
                 <legend><h2 className='test-heading'>Upcoming Tests</h2></legend>
                 <div className='tests-body'>
-                    {upcomingTests.length === 0 ? <p>No Upcoming Tests</p> : upcomingTests.map((test,index) => {
-                        console.log(test,index)
-                        return <TestCard test={test} key={index} />
-                    })
+                    {upcomingTests.length === 0 ? <p>No Upcoming Tests</p> : upcomingTests.map((test,index) => <TestCard userid={userid} usertype={usertype} test={test} key={index} />
+                    )
                     }
                 </div>
             </fieldset>
             <fieldset className="tests">
             <legend><h2 className="test-heading">Recent Tests</h2></legend>
             <div className="tests-body">
-              {pastTests.length === 0 ? <p>No Recent Tests</p> : pastTests.map((test,index) => {
-                return <TestCard test={test} key ={index} />
-              })}
+              {pastTests.length === 0 ? <p>No Recent Tests</p> : pastTests.map((test,index) => <TestCard userid={userid} usertype={usertype} test={test} key ={index} />
+              )}
             </div>
           </fieldset>
         

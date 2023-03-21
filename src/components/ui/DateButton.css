@@ -1,0 +1,11 @@
+.date-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    width: fit-content;
+    background: #fff;
+    margin: 10px;
+    border-radius: 8px;
+}

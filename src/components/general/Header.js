@@ -15,6 +15,8 @@ export default function Header({children}) {
   const [user,loading,error] = useAuthState(auth);
   const [userProfileVisible, setUserProfileVisible] = useState(false);
 
+  console.log('loadinggggggggg',loading)
+
   const UserProfileHander = () => {
     if(userProfileVisible === true){
       setUserProfileVisible(false)
