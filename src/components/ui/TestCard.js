@@ -21,7 +21,8 @@ export default function TestCard({userid,usertype,test}) {
                 navigate(`/${userid}/${usertype}/test/${test.id}`, {replace: false})
             }
             if(usertype==='Teacher'){
-                navigate(`/${userid}/${usertype}/test/${test.id}`)
+                navigate(`/${userid}/${usertype}/editTest/${test.id}`)
+            
             }
         }
         if(test?.status === 'past'){
@@ -33,10 +34,16 @@ export default function TestCard({userid,usertype,test}) {
                 navigate(`/${userid}/${usertype}/evaluatetest/${test.id}`)
             }
         }
+        if(test?.status === 'upcoming'){
+            if(usertype==='Teacher'){
+                navigate(`/${userid}/${usertype}/editTest/${test.id}`)
+            
+            }
+        }
         
     }
 
-
+    const createdDate = new Date(test?.createtime?.seconds*1000);
     
     useEffect(() => {
         async function ReadUserData() {
@@ -77,8 +84,10 @@ export default function TestCard({userid,usertype,test}) {
   return (
     <div className='card-container'>
         <h2 className='test-title'>{test?.title}</h2>
+        <h2 style={{fontSize:'10px'}}>{test?.id}</h2>
         <h4 className='test-subtitle'>{test?.subject}</h4>
         <h4 className='test-created-by'>Created By: {test?.createdBy}</h4>
+        <h4 className='test-created-by'>Created At: {createdDate.getDate()}/{createdDate.getMonth() +1}/{createdDate.getFullYear()}</h4>
         <h2 className='test-duration'>{`Duration: ${test?.duration} minutes`}</h2>
         <h5 className='test-status'>{test?.statusText}</h5>
         <Button text={buttonTest} onclick={clickHandle} />

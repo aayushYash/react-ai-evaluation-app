@@ -25,7 +25,6 @@ export default function InputText({ val, onchange, icon, type, placeholder, vali
     }
   };
 
-  console.log(fieldType,type,width)
 
   return (
     <div className="inputtextContainer" style={width ? {width: `${width}px` } : null} >

@@ -5,7 +5,6 @@ import { FormateDate } from '../util/DateFormater';
 import './DateButton.css'
 
 export default function DateButton({val,text,onChange,display,clickHandler}) {
-    console.log(display,val,'DateButon')
   return (
     <div onClick={clickHandler} className='date-button'>
         <FontAwesomeIcon icon={"calendar"} color={'#000'} style={{marginRight: '5px'}} />

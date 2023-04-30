@@ -84,7 +84,7 @@ export default function LoginScreen() {
         );
         if (docSnap.data()?.profile.usertype !== userType) {
           toast.error("Not Authorised User!");
-          console.log("hhh");
+          console.log("hhh 87");
           // navigate(-1)
         }
       }

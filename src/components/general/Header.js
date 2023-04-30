@@ -42,9 +42,8 @@ export default function Header({children}) {
     <div className="header">
       <div className={"l"}>
         <h1 className=" font-bold text-2xl font-mono p-2 text-white">
-          Weffe AI
+          IntelliTest.🤖
         </h1>
-        {/* <img src='.' />  */}
       </div>
       {!user ? 
       <div className="buttons">
@@ -65,7 +64,7 @@ const UserProfile = ({signout, user, children}) => {
       <Avatar user={user} />
     </div>
     <div style={{'borderBottom': '1px solid black', 'width': '90%', 'paddingBottom': '5px', 'paddingTop': '5px'}}>
-    <Link to={`/${user.uid}/Profile`}>User Profile</Link>
+    <Link to={`/${user.uid}/T/Profile`}>User Profile</Link>
     <p>Change Password</p>
     </div>
     {children}

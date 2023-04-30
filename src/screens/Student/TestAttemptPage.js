@@ -114,7 +114,7 @@ function TestAttemptPage() {
           <div className=" p-4  flex justify-between items-center">
             <h1>Time LEFT:: xx: xx</h1>
             
-            <Button text={"Exit"} onclick={ () => navigate(-1)}/>
+            <Button text={"Exit"} onclick={() => navigate(-1)}/>
           </div>
         </div>
 
@@ -126,61 +126,7 @@ function TestAttemptPage() {
             {!info ? "View Test Information :-" : "Close Test Information"}
           </p>
           <h1 className="  text-4xl">Questions </h1>
-          {/* <div className=" p-4">
-            <h1 className=" text-xl font-extrabold">
-              Q1: How many Verbs are there in English ? [10marks]
-            </h1>
-            <textarea
-              className=" w-full border-2 mt-2 rounded-lg outline-none border-gray-700 p-2 "
-              cols="30"
-              rows="4"
-              placeholder=" Write your answer here...."
-            ></textarea>
-          </div>
-          <div className=" p-4">
-            <h1 className=" text-xl font-extrabold">
-              Q2: How many Verbs are there in English ? [10marks]
-            </h1>
-            <textarea
-              className=" w-full border-2 mt-2 rounded-lg outline-none border-gray-700 p-2 "
-              cols="30"
-              rows="4"
-              placeholder=" Write your answer here...."
-            ></textarea>
-          </div>
-          <div className=" p-4">
-            <h1 className=" text-xl font-extrabold">
-              Q3: How many Verbs are there in English ? [10marks]
-            </h1>
-            <textarea
-              className=" w-full border-2 mt-2 rounded-lg outline-none border-gray-700 p-2 "
-              cols="30"
-              rows="4"
-              placeholder=" Write your answer here...."
-            ></textarea>
-          </div>
-          <div className=" p-4">
-            <h1 className=" text-xl font-extrabold">
-              Q4: How many Verbs are there in English ? [10marks]
-            </h1>
-            <textarea
-              className=" w-full border-2 mt-2 rounded-lg outline-none border-gray-700 p-2 "
-              cols="30"
-              rows="4"
-              placeholder=" Write your answer here...."
-            ></textarea>
-          </div>
-          <div className=" p-4">
-            <h1 className=" text-xl font-extrabold">
-              Q5: How many Verbs are there in English ? [10marks]
-            </h1>
-            <textarea
-              className=" w-full border-2 mt-2 rounded-lg outline-none border-gray-700 p-2 "
-              cols="30"
-              rows="4"
-              placeholder=" Write your answer here...."
-            ></textarea>
-          </div> */}
+          
           {questionset.map((question,i) => {
             console.log(answerset[i],question,"map func")
           return <QuestionAnswer question={question} answerset={answerset[i]} key={i} changeHandler={onAnswerChange} id={i} />})}

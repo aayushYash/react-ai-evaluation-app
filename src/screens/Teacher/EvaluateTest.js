@@ -6,7 +6,7 @@ import { auth, db } from '../../firebase/firebase'
 import axios from "axios";
 import Header from '../../components/general/Header'
 import { toast, ToastContainer } from 'react-toastify'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
 import './EvaluateTest.css'
 
 export default function EvaluateTest() {
@@ -15,52 +15,57 @@ export default function EvaluateTest() {
     const [optionsForAuth,setOptionsForAuth] = useState()
     const [idToken,setIdToken] = useState('')
     const [authResponse,setAuthResponse] = useState()
-    const [evaluateIdToken,setEvaluateIdToken] = useState('')
     const [details,setDetails] = useState();
     const [evaluationStatus,setEvaluationStatus] = useState()
     const navigate = useNavigate()
+    const [members,setMembers] = useState([])
     
 
-      
-
-    async function FetchEvaluationState() {
-      const testDetailDoc = await getDoc(doc(db, 'testDetails', `${testid}`))
-      setEvaluationStatus(testDetailDoc.data().evaluationStatus);
-    }
 
     async function FetchTestData() {
       const testDetailDoc = await getDoc(doc(db,'testDetails',`${testid}`))
       const testDetailData = testDetailDoc.data();
       const testTitle = testDetailData.title
-      const groupName = await (await getDoc(doc(db,'group',testDetailData.assignedTo))).get('groupName');
-      console.log(groupName)
-      const groupMember = await (await getDoc(doc(db,'group',testDetailData.assignedTo))).get('groupMember');
-      const questionSetDoc = await (await getDoc(doc(db,'questionset',`${testid}`))).data();
+      // const groupName = await (await getDoc(doc(db,'group',testDetailData.assignedTo))).get('groupName');
+      // console.log(groupName)
+      // const groupMember = await (await getDoc(doc(db,'group',testDetailData.assignedTo))).get('groupMember');
 
-      let memberNames =[]
-      for(var member in groupMember){
-        console.log(groupMember[member])
-        const name = await (await getDoc(doc(db,'users',groupMember[member]))).get("profile").name
-        memberNames = [...memberNames,name]
-      }
 
-      console.log(questionSetDoc);
+      const groupsRef = query(collection(db,'group'),where('tests', 'array-contains', testid))
+
+      const groupDocRef = await getDocs(groupsRef)
+      console.log(groupDocRef.size)
+      
+      groupDocRef.forEach(groupDoc => {
+        groupDoc.data().groupMember.forEach(async member => {
+          const memberData = (await getDoc(doc(db,'users',member))).data()
+          const memberarray = members
+          const newData = {
+            id: member,
+            name: memberData.profile.name,
+          }
+          if(!members.includes(newData)){
+            setMembers(prev => [...prev,newData])
+          }
+        })
+      })
+
+      const questionSetDoc = (await getDoc(doc(db,'questionset',`${testid}`)));
+
       let questins = []
-      for(var quesion in questionSetDoc){
-        questins = [...questins,questionSetDoc[quesion]]
-        console.log(questionSetDoc[quesion].question)
+      for(var quesion in questionSetDoc.data()){
+        console.log(quesion,"for loop")
+        questins = [...questins,questionSetDoc.data()[quesion]]
       }
-      for(var name in memberNames){
-        console.log(memberNames[name])
-      }
+      console.log(questins)
       setDetails(() => {return {
         testTitle:testTitle,
-        members: memberNames,
         started: `${new Date(testDetailData.starttime.seconds*1000).getDate()}/${new Date(testDetailData.starttime.seconds*1000).getMonth()+1}/${new Date(testDetailData.starttime.seconds*1000).getFullYear()}   ${new Date(testDetailData.starttime.seconds*1000).getHours().toLocaleString()}:${new Date(testDetailData.starttime.seconds*1000).getMinutes().toLocaleString()}`,
         endedAt: `${new Date(testDetailData.endtime.seconds*1000).getDate()}/${new Date(testDetailData.endtime.seconds*1000).getMonth()+1}/${new Date(testDetailData.endtime.seconds*1000).getFullYear()}   ${new Date(testDetailData.endtime.seconds*1000).getHours().toLocaleString()}:${new Date(testDetailData.endtime.seconds*1000).getMinutes().toLocaleString()}`,
         duration: testDetailData.duration,
         questions: questins
       }})
+      setEvaluationStatus(testDetailDoc.data().evaluationStatus);
 
     }
 
@@ -75,7 +80,7 @@ export default function EvaluateTest() {
       console.log(idToken,"token")
       setOptionsForAuth(()=>({
         method: 'POST',
-        url: 'http://127.0.0.1:5000/api/v1/auth',
+        url: 'http://3.109.152.176:80/api/v1/auth',
         data: {
           idToken: idToken
         }
@@ -84,28 +89,42 @@ export default function EvaluateTest() {
 
     useEffect(() => {
       user?.getIdToken().then(result => setIdToken(result))
-      // console.log(idToken,"tokeeeeeeeeeeeen")
       
     },[user])
 
     useEffect(() => {
       let access_token;
       authResponse?.then(result => {
-        // setEvaluateIdToken(result.data.access_token,"result")
         access_token =result.data.access_token
-        console.log(access_token,"console...................acceesstoken")
         const optionForEvaluation = {
           method: 'POST',
-          url: 'http://127.0.0.1:5000/api/v1/evaluate',
+          url: 'http://3.109.152.176:80/api/v1/evaluate',
           headers: {
             Authorization: `Bearer ${access_token}`
           },
           data: {testid: testid}
         }
 
+        const options = {
+          method: 'DELETE',
+          url: 'http://3.109.152.176/api/v1/logout',
+          headers: {
+            Authorization: `Bearer ${access_token}`
+          }
+        };
+
+        
+        
+
         axios.request(optionForEvaluation).then(function (response) {
           toast.success("Evaluation Completed")
-          FetchEvaluationState()
+          FetchTestData()
+          console.log(response.data);
+        }).catch(function (error) {
+          console.error(error);
+        });
+
+        axios.request(options).then(function (response) {
           console.log(response.data);
         }).catch(function (error) {
           console.error(error);
@@ -113,10 +132,11 @@ export default function EvaluateTest() {
         
       }).catch(e => toast.error(e.message))
 
+      
+
     }, [authResponse])
 
     useEffect(() => {
-      FetchEvaluationState()
       FetchTestData()
     },[])
 
@@ -140,15 +160,15 @@ export default function EvaluateTest() {
               
               <fieldset className='tests'>
                 <legend className='assignedTo'>Test Assigned To</legend>
-                {details ? details?.members.map((member,index) => <div key={index} className="assigned">
-                  {member}
-                </div>) : null}
+                {members.length > 0 ? members.map((member,index) => <div key={index} className="assigned">
+                  {member.name}
+                </div>) : <p>No Users</p>}
               </fieldset>
               <fieldset className='tests'>
                 <legend className=' assignedTo'>Questions</legend>
-                {details ? details?.questions.map((quesion,index) => <div key={index} className="question">
-                  <div>{quesion.question}</div>
-                  <div>[{quesion.marks}]</div>
+                {details ? details?.questions?.map((quesion,index) => <div key={index} className="question">
+                  <div>{quesion?.question}</div>
+                  <div>[{quesion?.marks}]</div>
                 </div>) : null}
               </fieldset>
             </div>

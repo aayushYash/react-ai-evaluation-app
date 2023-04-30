@@ -10,7 +10,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { faAdd, faBackward, faForward, fas, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faBackward, faCheck, faFilter, faForward, faRepeat, fas, faSort, faTimesCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser,
   faLock,
@@ -32,7 +32,6 @@ import ManageProfile from "./screens/ManageProfile";
 import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { userState } from "./Atom/atom";
-import { signOut } from "firebase/auth";
 import TeacherDashboard from "./screens/Teacher/TeacherDashboard";
 import TestAttemptPage from "./screens/Student/TestAttemptPage";
 import NewTestAdd from "./screens/Teacher/NewTestAdd";
@@ -40,6 +39,7 @@ import EvaluateTest from "./screens/Teacher/EvaluateTest";
 import TestSubmitted from "./screens/Student/TestSubmitted";
 import CheckResult from "./screens/Student/CheckResult";
 import Group from "./screens/Teacher/Group";
+import EditTest from "./screens/Teacher/EditTest";
 
 library.add(
   fas,
@@ -58,7 +58,12 @@ library.add(
   faAdd,
   faBackward,
   faForward,
-  faTimesCircle
+  faTimesCircle,
+  faCheck,
+  faTrash,
+  faSort,
+  faFilter,
+  faRepeat
 );
 
 export default function App() {
@@ -81,11 +86,11 @@ export default function App() {
 
   useEffect(() => {
     if (user && !user.emailVerified) {
-      navigate(`${user.uid}/verifyEmail`);
+      navigate(`${user.uid}/${user.usertype}/verifyEmail`);
     }
     if (user && userData?.profile.institute.length === 0) {
       console.log(userData?.profile.institute);
-      navigate(`${user.uid}/Profile`);
+      navigate(`${user.uid}/${user.usertype}/Profile`);
     }
     if (
       user &&
@@ -142,6 +147,9 @@ export default function App() {
           </Route>
           <Route path="evaluatetest">
             <Route path=":testid" element={<EvaluateTest />}  />
+          </Route>
+          <Route path="editTest">
+            <Route path=":testid" element={<EditTest />} />
           </Route>
           <Route path="checkresult">
             <Route path=":testid" element={<CheckResult />}  />

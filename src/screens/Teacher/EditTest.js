@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/general/Header";
+import Footer from "../../components/general/Footer";
 import Button from "../../components/ui/Button";
 import InputText from "../../components/ui/InputText";
 import DateButton from "../../components/ui/DateButton";
@@ -11,6 +12,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   setDoc,
@@ -20,7 +22,7 @@ import {
 import { db } from "../../firebase/firebase";
 import { useNavigate, useParams } from "react-router-dom";
 
-function NewTestAdd() {
+function EditTest() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [startdisplay, setStartDisplay] = useState(false);
@@ -50,7 +52,7 @@ function NewTestAdd() {
 
   const [validQuestionSet, setValidQuestionSet] = useState(false);
 
-  const { userid } = useParams();
+  const { userid, testid } = useParams();
   const navigate = useNavigate();
 
   function clickHandlerStart() {
@@ -96,6 +98,7 @@ function NewTestAdd() {
   }
 
   function validateQuestionSet() {
+    console.log(Object.keys(questinSet), selectedGroups, testTitle);
     if (Object.keys(questinSet).length === 0) {
       toast.error("Question Set Can' be empty.");
       return false;
@@ -189,16 +192,15 @@ function NewTestAdd() {
       evaluationStatus: false,
     };
 
-    const docRef = await addDoc(collection(db, "testDetails"), testDetailsData);
-    const testid = docRef.id;
+    await updateDoc(doc(db, "testDetails", testid), testDetailsData);
     const testDataForUser = {
       attempted: false,
       testid: testid,
     };
-    await setDoc(doc(db, "questionset", testid), questionSetData);
+    await updateDoc(doc(db, "questionset", testid), questionSetData);
     users.forEach(async (user) => {
       Object.keys(questinSet).forEach(async (key) => {
-        await setDoc(doc(db, "tests", testid, user, key), testData);
+        await updateDoc(doc(db, "tests", testid, user, key), testData);
       });
       await updateDoc(doc(db, "users", user), {
         tests: arrayUnion(testDataForUser),
@@ -211,7 +213,7 @@ function NewTestAdd() {
       });
     });
 
-    toast.success("Test Created" + testid);
+    toast.success("Test Data Updated" + testid);
     setTimeout(() => {
       navigate(-1);
     }, 2000);
@@ -260,21 +262,44 @@ function NewTestAdd() {
 
   useEffect(() => {
     getTotalMarks();
+  }, [totalMarks, showAddQuestion, rerender]);
+
+  useEffect(() => {
+    let groupsData = [];
     async function GetGroupsData() {
       const groups = query(
         collection(db, "group"),
         where("createdBy", "==", userid)
       );
       const groupSnap = await getDocs(groups);
-      let groupsData = [];
       groupSnap.forEach((group) => {
         groupsData = [...groupsData, { ...group.data(), id: group.id }];
       });
       setGroups(groupsData);
     }
-    console.log(selectedGroups,"selected group")
     GetGroupsData();
-  }, [totalMarks, showAddQuestion, rerender]);
+    async function FetchTestData() {
+      const testDetail = await getDoc(doc(db, "testDetails", testid));
+      console.log(testDetail.data(), "test data");
+      setTestTitle(testDetail.data().title);
+      setCourseSubject(testDetail.data().subject);
+      setStartDate(new Date(testDetail.data().starttime.seconds * 1000));
+      setEndDate(new Date(testDetail.data().endtime.seconds * 1000));
+      setTestduration(testDetail.data().duration);
+      setDescription(testDetail.data().testDescription);
+      setRules(testDetail.data().rules);
+
+      groupsData.forEach((group) => {
+        if (testDetail.data().assignedTo.includes(group.id)) {
+          setSelectedGroups((prev) => [...prev, group]);
+        }
+      });
+
+      const quesitionSet = await getDoc(doc(db, "questionset", testid));
+      setQuestionSet(quesitionSet.data());
+    }
+    FetchTestData();
+  }, []);
 
   return (
     <div className="add-test-screen">
@@ -411,6 +436,7 @@ function NewTestAdd() {
               >
                 Question Set
               </h1>
+              {testid}
               <div style={{ minWidth: "150px" }}>
                 <div>Total Marks : {totalMarks}</div>
                 <div>Total Questions : {Object.keys(questinSet).length}</div>
@@ -461,10 +487,6 @@ function NewTestAdd() {
               setSelectedGroups={selectionHandler}
             />
           )}
-
-
-
-          {/* Add Questions and keyword section 👇*/}
           {showAddQuestion === true ? (
             <AddQuestionKeyword
               onCancel={() => reset()}
@@ -769,4 +791,4 @@ function GroupsToAssign({ groups, selectedGroups, setSelectedGroups }) {
   );
 }
 
-export default NewTestAdd;
+export default EditTest;
