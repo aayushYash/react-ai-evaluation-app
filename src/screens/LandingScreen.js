@@ -21,10 +21,10 @@ export default function LandingScreen() {
             />
             <div className="w-[100%] md:w-[50%]">
               <h1 className=" text-green-500   font-bold text-6xl drop-shadow-lg font-sans">
-                Weffe{" "}
+                InteliTest{" "}
                 <span className=" text-blue-500 font-thin">
                   {" "}
-                  Artificial Intelligence
+                  AI Powered Answer Script Evaluator.
                 </span>
               </h1>
               <p className=" text-lg font-light font-mono text-gray-300 w-[80%]">
@@ -54,9 +54,9 @@ export default function LandingScreen() {
             />
             <FramesCard
               frameImage={
-                "https://upload.wikimedia.org/wikipedia/commons/0/07/Reddit_icon.svg"
+                "https://symbols.getvecta.com/stencil_28/14_cache-redis-product-icon.a30451cffb.svg"
               }
-              frameTitle={"reddit"}
+              frameTitle={"Redis"}
             />
             <FramesCard frameImage={"images/AWS.png"} frameTitle={"AWS"} />
           </div>

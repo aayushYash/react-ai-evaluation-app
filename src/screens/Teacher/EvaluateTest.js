@@ -44,6 +44,11 @@ export default function EvaluateTest() {
             id: member,
             name: memberData.profile.name,
           }
+          setMembers(prev =>  prev
+                                .map(e => e['id'])
+                                .map((e, i, final) => final.indexOf(e) === i && i)
+                                .filter(obj=> prev[obj])
+                                .map(e => prev[e]));
           if(!members.includes(newData)){
             setMembers(prev => [...prev,newData])
           }

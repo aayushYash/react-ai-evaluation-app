@@ -4,16 +4,22 @@ import Footer from "../../components/general/Footer";
 import Button from "../../components/ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import {getDoc,doc,updateDoc} from 'firebase/firestore'
-import { auth, db } from '../../firebase/firebase'
+import { auth, db } from '../../firebase/firebase';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import '../Teacher/NewTestAdd.css'
+import { FormateDate } from "../../components/util/DateFormater";
+
 
 
 function TestAttemptPage() {
-  const [info, setInfo] = useState(false);
   const navigate =useNavigate();
   const [questionset,setQuestionset] = useState([])
   const [answerset,setAnswerset] = useState([])
+  const [testDetails,setTestDetails] = useState()
 
+  const [left,setLeft] = useState(false)
   const {testid,userid} = useParams()
+
   
 
   function onAnswerChange(e) {
@@ -47,6 +53,7 @@ function TestAttemptPage() {
   useEffect(() => {
     async function FetchDataFromFB(){
       const set = await getDoc(doc(db,'questionset',testid))
+      const details = await getDoc(doc(db,'testDetails',testid))
       const setObj = set.data()
       for (var question in setObj){
         setQuestionset(prev => [...prev,setObj[question]])
@@ -54,78 +61,79 @@ function TestAttemptPage() {
         ans[question] = ''
         setAnswerset(prev => [...prev,ans])
       }
+      setTestDetails(details.data())
+      console.log(details.data(),"details")
     
     }
     FetchDataFromFB()
     
   }, [])
 
-  
+  console.log(testDetails,"test details")
 
 
 
   return (
     <div>
       <Header />
-      <div className=" grid grid-cols-4 w-full">
-        <div
-          className={` ${
-            info
-              ? " md:inline-flex col-span-4 md:col-span-1"
-              : "col-span-1 hidden md:inline-flex"
-          }
-          
-            p-2 flex-col  border-gray-800 border-r`}
-        >
-          <div className=" m-2">
-            <h1 className="text-3xl font-bold ">Test Title</h1>
-            <p className=" text-xs font-bold text-gray-600">
-              Test Started at: xx:xx{" "}
-            </p>
-            <p>Created at: Aayush yash[903231]</p>
+      <div className="add-test-body">
+      <div className={left ? "add-test-info left" : "add-test-info"}>
+          <div
+            className="iconOpen"
+            onClick={() => setLeft(false)}
+            style={{ alignSelf: "flex-end" }}
+          >
+            Close <FontAwesomeIcon icon={"times-circle"} />{" "}
           </div>
-          <div className=" mt-5 m-2">
-            <h1 className="text-3xl font-bold ">Test Description</h1>
-            <p className=" text-xs font-bold text-gray-600">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-              mollitia, voluptatem quos ullam debitis sed, distinctio velit
-              laboriosam molestias, quae quod aperiam nulla at. Itaque officia
-              esse tempore ducimus doloribus.
-            </p>
-          </div>
-          <div className=" mt-5 m-2 h-[400px]  ">
-            <h1 className="text-3xl font-bold ">Test Rules</h1>
-            <div>
-              <p className=" text-xs font-bold text-gray-600">
-                1: Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
-              <p className=" text-xs font-bold text-gray-600">
-                2: mollitia, voluptatem quos ullam debitis sed, distinctio
-              </p>
-              <p className=" text-xs font-bold text-gray-600">
-                velit 3: laboriosam molestias, quae quod aperiam nulla at.
-                Itaque
-              </p>
-              <p className=" text-xs font-bold text-gray-600">
-                4: esse tempore ducimus doloribus.
-              </p>
+          <div className="basic-info">
+            {/* title */}
+            <p style={{fontSize: '28px', fontWeight: 'bold'}}>{testDetails?.title}</p>
+            {/* course/subject */}
+            <p style={{fontSize: '18px', fontWeight: 'bold'}}>Subject/Course: {testDetails?.subject}</p>
+            <div className="dates">
+              {/* start date */}
+              <p>Start At: {FormateDate(new Date(testDetails?.starttime.seconds*1000))}</p>
+              {/* end date */}
+              <p>End At: {FormateDate(new Date(testDetails?.endtime.seconds*1000))}</p>
+
+            </div>
+            <div className="duration">
+              
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "280px",
+                }}
+              >
+                {/* test duration */}
+                <p>Duration: {testDetails?.duration} Mins</p>
+              </div>
             </div>
           </div>
-          <div className=" p-4  flex justify-between items-center">
-            <h1>Time LEFT:: xx: xx</h1>
-            
-            <Button text={"Exit"} onclick={() => navigate(-1)}/>
-          </div>
+          <fieldset className="description">
+            <legend>Description</legend>
+            {/* description */}
+            <p>{testDetails?.testDescription}</p>
+          </fieldset>
+          <fieldset className="rules">
+            <legend>Rules</legend>
+            <div className="scroll" style={{ overflowY: "scroll" }}>
+              <div>
+                {/* rules */}
+                {testDetails?.rules.map((rule,index) => <p key={index}>{index+1}. {rule}</p>)}
+              </div>
+            </div>
+          </fieldset>
         </div>
 
-        <div className={` p-5 col-span-4  md:col-span-3`}>
-          <p
-            onClick={() => setInfo(!info)}
-            className=" text-[#01082D] inline-flex md:hidden  hover:underline"
-          >
-            {!info ? "View Test Information :-" : "Close Test Information"}
-          </p>
+        <div className={`add-test-section`}>
+          
           <h1 className="  text-4xl">Questions </h1>
+          <div className="iconOpen" onClick={() => setLeft(true)}>
+            Test Information <FontAwesomeIcon icon={"forward"} />
+          </div>
           
           {questionset.map((question,i) => {
             console.log(answerset[i],question,"map func")
